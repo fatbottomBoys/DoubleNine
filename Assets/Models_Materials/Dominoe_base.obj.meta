@@ -3,7 +3,22 @@ guid: 082e5a8ad7be92b47b23f6444a199e4a
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Dominoe_base_Lambert2SG
+    second: {fileID: 2100000, guid: 23a52f9ec08acf242b9868c8b3bb6a7e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Dominoe_base_blinn1SG
+    second: {fileID: 2100000, guid: 00fa9a09f83e7cd489cb73a6a4187a88, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Dominoe_base_blinn2SG
+    second: {fileID: 2100000, guid: 8ff06ff82d289f04c9bc3596a4ff0a03, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
