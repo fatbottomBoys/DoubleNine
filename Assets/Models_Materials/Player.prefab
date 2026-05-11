@@ -137,6 +137,37 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!1 &6560468695388990969
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4444961998472173970}
+  m_Layer: 0
+  m_Name: Dominoes
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4444961998472173970
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6560468695388990969}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.5313307, y: 0, z: 0, w: -0.8471645}
+  m_LocalPosition: {x: 0, y: 0.2, z: -4.328}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8409454122680435287}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6826146070968252195
 GameObject:
   m_ObjectHideFlags: 0
@@ -283,6 +314,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8409454122680435287}
+  - component: {fileID: 5160870307736604854}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -305,5 +337,36 @@ Transform:
   m_Children:
   - {fileID: 6089163974573241314}
   - {fileID: 144541985046147706}
+  - {fileID: 4444961998472173970}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5160870307736604854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7750240284258936600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e27d8ccd908954449a51c959baa8b262, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Player
+  playerID: 0
+  myDominoValues: []
+  myDominoes: []
+  myDominoField: {fileID: 6560468695388990969}
+  baseDomino: {fileID: 6586889422081284681, guid: 726927bdebcb56549aaaec940c87cd72, type: 3}
+  dominoTextures:
+  - {fileID: 2800000, guid: ddaee65964d15034aaddfd1fc4404232, type: 3}
+  - {fileID: 2800000, guid: b71687fa46913ec49bf2f67635e15395, type: 3}
+  - {fileID: 2800000, guid: 81b1cffeba74c364781ea92fca862cbc, type: 3}
+  - {fileID: 2800000, guid: b28ee1d218bd2f94b8ea1f1e441a542c, type: 3}
+  - {fileID: 2800000, guid: 12729430e1105374ca81c16570f17579, type: 3}
+  - {fileID: 2800000, guid: b85799425f7c28d4ca20e8b41795667a, type: 3}
+  - {fileID: 2800000, guid: 08f11cf8dafe1ed49be5a6d87ddd8f0e, type: 3}
+  - {fileID: 2800000, guid: a4fe975ebe81c864998ec9aa41b18691, type: 3}
+  - {fileID: 2800000, guid: d49eb7a7823fb1e4fbf53a8d3cc01a21, type: 3}
+  - {fileID: 2800000, guid: 1bd2d28df9efc5f4795674135d42ee09, type: 3}
+  frontCam: {fileID: 3587944681178989675}
+  topCam: {fileID: 6826146070968252195}
