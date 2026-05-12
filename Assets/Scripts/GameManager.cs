@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -15,13 +16,23 @@ public class GameManager : MonoBehaviour
     public int firstPlayer;
     public int curPlayerTurn;
 
-    [Header("Editable Game Objects")]
+    [Header("Dominoes on-field")]
     public GameObject dominoField;
+    public Vector2 playableEnds;
 
     [Header("Dominoes")]
     [Tooltip("x and y = values of the domino, z = whether its been played or not")]
     public Vector3[] allDominoes;
     public Vector3[] shuffledDominoes;
+
+    [Header("Game Start stuff")]
+    public Vector3[] camPos;
+    public Vector3[] camRot;
+    [SerializeField] private AnimationCurve camAnimFlow;
+    public float camAnimTime;
+    public float animFrameRate;
+
+    
 
 
 
@@ -29,6 +40,7 @@ public class GameManager : MonoBehaviour
     {
         PopulateDominoes();
         DistributeDominoes();
+        StartCoroutine(StartGame());
         
     }
 
@@ -103,7 +115,6 @@ public class GameManager : MonoBehaviour
         }
 
     }
-
     private Vector3[] Shuffle(Vector3[] array)      // shuffles a Vector3 array
     {                                               // if you know how to make this work for any type of array, be my guest.
         List<Vector3> shuffledDoms = new List<Vector3>();
@@ -129,6 +140,24 @@ public class GameManager : MonoBehaviour
         return shuffledDoms.ToArray();
     }
 
-    
+    public IEnumerator StartGame()
+    {
+        yield return new WaitForEndOfFrame();
+        for(int i = 0; i < camAnimTime * animFrameRate; i++)
+        {
+            float t = i / (camAnimTime * animFrameRate);
+
+            for (int j = 0; j < 4; j++)
+            {
+                Player playerStats = players[j].transform.GetComponent<Player>();
+                playerStats.frontCam.transform.localPosition = Vector3.Lerp(camPos[0], camPos[1], camAnimFlow.Evaluate(t));
+                playerStats.frontCam.transform.localRotation = Quaternion.Lerp(Quaternion.Euler(camRot[0]), Quaternion.Euler(camRot[1]), camAnimFlow.Evaluate(t));
+            }
+
+            yield return new WaitForFixedUpdate();
+        }
+
+        yield break;
+    }
 
 }

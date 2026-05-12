@@ -9,6 +9,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public int playerID;
+    public GameManager gameManager;
 
     [Header("My dominoes")]
     public Vector3[] myDominoValues;
@@ -30,6 +31,9 @@ public class Player : MonoBehaviour
             int myY = Mathf.RoundToInt(myDominoValues[i].y);
             GameObject go = GameObject.Instantiate(baseDomino, myDominoField.transform);
             go.transform.localPosition = new Vector3(-1.35f + (i * 0.3f), 0, 0);
+            go.name = "Domino_" + myX + "_" + myY;
+            DominoStats goStats = go.transform.GetComponent<DominoStats>();
+            goStats.myValue = myDominoValues[i];
 
             Material[] myMat = go.transform.GetChild(0).transform.GetComponent<MeshRenderer>().materials;
             myMat[1].mainTexture = dominoTextures[myX];
@@ -39,5 +43,10 @@ public class Player : MonoBehaviour
             tempDoms.Add(go);
         }
         myDominoes = tempDoms.ToArray();
+    }
+
+    public void PlayTile()
+    {
+
     }
 }
