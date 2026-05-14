@@ -251,6 +251,113 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &734008693
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 734008696}
+  - component: {fileID: 734008695}
+  - component: {fileID: 734008694}
+  m_Layer: 0
+  m_Name: NetworkManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &734008694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 734008693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6960e84d07fb87f47956e7a81d71c4e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Transports.UTP.UnityTransport
+  m_ProtocolType: 0
+  m_UseWebSockets: 0
+  m_UseEncryption: 0
+  m_MaxPacketQueueSize: 128
+  m_MaxPayloadSize: 6144
+  m_HeartbeatTimeoutMS: 500
+  m_ConnectTimeoutMS: 1000
+  m_MaxConnectAttempts: 60
+  m_DisconnectTimeoutMS: 30000
+  ConnectionData:
+    Address: 127.0.0.1
+    Port: 7777
+    WebSocketPath: /
+    ServerListenAddress: 127.0.0.1
+    ClientBindPort: 0
+  DebugSimulator:
+    PacketDelayMS: 0
+    PacketJitterMS: 0
+    PacketDropRate: 0
+--- !u!114 &734008695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 734008693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 593a2fe42fa9d37498c96f9a383b6521, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkManager
+  NetworkManagerExpanded: 0
+  NetworkConfig:
+    ProtocolVersion: 0
+    NetworkTransport: {fileID: 734008694}
+    PlayerPrefab: {fileID: 7750240284258936600, guid: fd685ff55fc2e7b4aa0d39373158aa3b, type: 3}
+    Prefabs:
+      NetworkPrefabsLists:
+      - {fileID: 11400000, guid: 962be970b4893134a8bb9bbcc0f95921, type: 2}
+    TickRate: 30
+    ClientConnectionBufferTimeout: 10
+    ConnectionApproval: 0
+    ConnectionData: 
+    EnableTimeResync: 0
+    TimeResyncInterval: 30
+    EnsureNetworkVariableLengthSafety: 0
+    EnableSceneManagement: 1
+    ForceSamePrefabs: 1
+    RecycleNetworkIds: 1
+    NetworkIdRecycleDelay: 120
+    RpcHashSize: 0
+    LoadSceneTimeOut: 120
+    SpawnTimeout: 10
+    EnableNetworkLogs: 1
+    NetworkTopology: 0
+    UseCMBService: 0
+    AutoSpawnPlayerPrefabClientSide: 1
+    NetworkMessageMetrics: 1
+    NetworkProfilingMetrics: 1
+    OldPrefabList: []
+  RunInBackground: 1
+  LogLevel: 1
+--- !u!4 &734008696
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 734008693}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &775353588 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7750240284258936600, guid: fd685ff55fc2e7b4aa0d39373158aa3b, type: 3}
@@ -393,6 +500,75 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 093040b865e7d3f4da860548b3115541, type: 3}
+--- !u!1 &1127406401
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1127406404}
+  - component: {fileID: 1127406403}
+  - component: {fileID: 1127406402}
+  m_Layer: 5
+  m_Name: MultiplayerUI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1127406402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1127406401}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa9cefaf46042fe4b84ce386f6c6f406, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MultiplayerUI
+  m_uidocument: {fileID: 1127406403}
+--- !u!114 &1127406403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1127406401}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: 55fd8eb8df749b348a66ede4ca2180b5, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: 701f41d25d580354da14d7ccfe3454e1, type: 3}
+  m_SortingOrder: 0
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
+--- !u!4 &1127406404
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1127406401}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1185564531
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -401,6 +577,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1981926939300795449, guid: fd685ff55fc2e7b4aa0d39373158aa3b, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 333753099
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981926939300795449, guid: fd685ff55fc2e7b4aa0d39373158aa3b, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981926939300795449, guid: fd685ff55fc2e7b4aa0d39373158aa3b, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 257922226
+      objectReference: {fileID: 0}
     - target: {fileID: 5160870307736604854, guid: fd685ff55fc2e7b4aa0d39373158aa3b, type: 3}
       propertyPath: playerID
       value: 2
@@ -474,6 +662,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1981926939300795449, guid: fd685ff55fc2e7b4aa0d39373158aa3b, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 3466596968
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981926939300795449, guid: fd685ff55fc2e7b4aa0d39373158aa3b, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981926939300795449, guid: fd685ff55fc2e7b4aa0d39373158aa3b, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 257922226
+      objectReference: {fileID: 0}
     - target: {fileID: 5160870307736604854, guid: fd685ff55fc2e7b4aa0d39373158aa3b, type: 3}
       propertyPath: playerID
       value: 1
@@ -553,6 +753,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1287201951}
+  - component: {fileID: 1287201953}
   - component: {fileID: 1287201952}
   m_Layer: 0
   m_Name: GameManager
@@ -588,6 +789,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa9b35e65a71046459b4e757d051fde8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  ShowTopMostFoldoutHeaderGroup: 1
   players:
   - {fileID: 83641251}
   - {fileID: 2080098371}
@@ -631,6 +833,32 @@ MonoBehaviour:
     m_RotationOrder: 4
   camAnimTime: 2.5
   animFrameRate: 60
+  m_multiplayerUI: {fileID: 1127406402}
+--- !u!114 &1287201953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1287201950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 2677486376
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 0
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!1001 &1972357496
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -639,6 +867,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1981926939300795449, guid: fd685ff55fc2e7b4aa0d39373158aa3b, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 1911705408
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981926939300795449, guid: fd685ff55fc2e7b4aa0d39373158aa3b, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981926939300795449, guid: fd685ff55fc2e7b4aa0d39373158aa3b, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 257922226
+      objectReference: {fileID: 0}
     - target: {fileID: 5160870307736604854, guid: fd685ff55fc2e7b4aa0d39373158aa3b, type: 3}
       propertyPath: playerID
       value: 3
@@ -717,6 +957,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1981926939300795449, guid: fd685ff55fc2e7b4aa0d39373158aa3b, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 1543339274
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981926939300795449, guid: fd685ff55fc2e7b4aa0d39373158aa3b, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981926939300795449, guid: fd685ff55fc2e7b4aa0d39373158aa3b, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 257922226
+      objectReference: {fileID: 0}
     - target: {fileID: 5160870307736604854, guid: fd685ff55fc2e7b4aa0d39373158aa3b, type: 3}
       propertyPath: gameManager
       value: 
@@ -799,3 +1051,5 @@ SceneRoots:
   - {fileID: 1972357496}
   - {fileID: 1287201951}
   - {fileID: 933426544}
+  - {fileID: 734008696}
+  - {fileID: 1127406404}

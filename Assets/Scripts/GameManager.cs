@@ -33,6 +33,7 @@ public class GameManager : NetworkBehaviour
     [SerializeField] private AnimationCurve camAnimFlow;
     public float camAnimTime;
     public float animFrameRate;
+    [SerializeField]private MultiplayerUI m_multiplayerUI;
 
     
 
@@ -43,7 +44,34 @@ public class GameManager : NetworkBehaviour
         PopulateDominoes();
         DistributeDominoes();
         StartCoroutine(StartGame());
+
+        //initialize debug multiplayer connectivity
+        if(m_multiplayerUI != null)
+        {
+            m_multiplayerUI.OnStartHost += StartHost;
+            m_multiplayerUI.OnStartClient += StartClient;
+            m_multiplayerUI.OnDisconnectClient += DisconnectClient;
+                
+        }
         
+    }
+
+    private void DisconnectClient()
+    {
+        m_multiplayerUI.DisableButtons();
+        NetworkManager.Shutdown();
+    }
+
+    private void StartClient()
+    {
+        m_multiplayerUI.DisableButtons();
+        NetworkManager.StartClient();
+    }
+
+    private void StartHost()
+    {
+        m_multiplayerUI.DisableButtons();
+        NetworkManager.StartHost();
     }
 
     void Update()
