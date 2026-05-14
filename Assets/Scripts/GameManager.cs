@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Unity.Netcode;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,8 +8,9 @@ using System.Security.Cryptography;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager : NetworkBehaviour
 {
+
     [Header("Players")]
     public GameObject[] players;
 
