@@ -20,7 +20,7 @@ public class GameManager : NetworkBehaviour
 
     [Header("Dominoes on-field")]
     public GameObject dominoField;
-    public Vector2 playableEnds;
+    public int[] playableEnds;
 
     [Header("Dominoes")]
     [Tooltip("x and y = values of the domino, z = whether its been played or not")]
