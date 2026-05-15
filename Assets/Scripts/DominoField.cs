@@ -181,7 +181,7 @@ public class DominoField : MonoBehaviour
         {
             if (curSection[side] % 2 == 0 && spaceOnTable[side] + (2 * dominoHalfSize[0]) + dominoHalfSize[1] >= sizeLimiter[0]) // if the current section is LONG and its OVER the long limit
             {
-                nextStandardRot[side] += new Vector3(0, 90 + (90 * curSection[side]), 0);
+                
                 curSection[side]++;
                 spaceOnTable[side] = 0;
 
@@ -194,13 +194,32 @@ public class DominoField : MonoBehaviour
                     multiplier[side] = -1;
                 }
 
-                nextStandardPos[side] = newDomino.transform.localPosition;
-                nextDoublePos[side] = newDomino.transform.localPosition;
+                int tempMult = 0;
+                if(newDomino.transform.localPosition.z > 0)
+                {
+                    tempMult = 1;
+                }
+                else
+                {
+                    tempMult = -1;
+                }
+
+                if (isDouble)
+                {
+                    
+                }
+                else
+                {
+                    nextStandardRot[side] += new Vector3(0, 90 + (90 * curSection[side]), 0);
+                    nextStandardPos[side] = newDomino.transform.localPosition + new Vector3(dominoHalfSize[1] * multiplier[side], 0, (dominoHalfSize[0] + dominoHalfSize[1]) * tempMult);
+                    nextDoublePos[side] = newDomino.transform.localPosition + new Vector3(0, 0, (dominoHalfSize[0] + dominoHalfSize[1]) * tempMult);
+                }
+                
 
             }
             else if (curSection[side] % 2 == 1 && spaceOnTable[side] + (2 * dominoHalfSize[0]) + dominoHalfSize[1] >= sizeLimiter[1]) // or if the current section is SHORT and its OVER the short limit
             {
-                nextStandardRot[side] += new Vector3(0, 90 * multiplier[side], 0);
+                
                 curSection[side]++;
                 spaceOnTable[side] = -1 * sizeLimiter[0];
 
@@ -213,48 +232,70 @@ public class DominoField : MonoBehaviour
                     multiplier[side] = 1;
                 }
 
-                nextStandardPos[side] = newDomino.transform.localPosition;
-                nextDoublePos[side] = newDomino.transform.localPosition;
+                int tempMult = 0;
+                if (newDomino.transform.localPosition.x > 0)
+                {
+                    tempMult = 1;
+                }
+                else
+                {
+                    tempMult = -1;
+                }
+
+
+                if (isDouble)
+                {
+
+                }
+                else
+                {
+                    nextStandardRot[side] += new Vector3(0, (90 * multiplier[side]) + 180, 0);
+                    nextStandardPos[side] = newDomino.transform.localPosition + new Vector3(dominoHalfSize[1] * tempMult, 0, 0.415f * multiplier[side]);
+                    nextDoublePos[side] = newDomino.transform.localPosition + new Vector3((dominoHalfSize[0] + dominoHalfSize[1]) * tempMult, 0, 0);
+                }
+                
 
             }
             else
             {
                 nextStandardPos[side] = newDomino.transform.localPosition;
                 nextDoublePos[side] = newDomino.transform.localPosition;
-            }
 
-
-
-            if (!isDouble)
-            {
-                if (curSection[side] % 2 == 0)
+                if (!isDouble)
                 {
-                    nextStandardPos[side] += ((new Vector3(0, 0, dominoHalfSize[0]) * 2) * multiplier[side]);
-                    nextDoublePos[side] += ((new Vector3(0, 0, dominoHalfSize[0]) + new Vector3(0, 0, dominoHalfSize[1])) * multiplier[side]);
+                    if (curSection[side] % 2 == 0)
+                    {
+                        nextStandardPos[side] += (new Vector3(0, 0, dominoHalfSize[0]) * 2) * multiplier[side];
+                        nextDoublePos[side] += new Vector3(0, 0, dominoHalfSize[0] + dominoHalfSize[1]) * multiplier[side];
+                    }
+                    else
+                    {
+                        nextStandardPos[side] += (new Vector3(dominoHalfSize[0], 0, 0) * 2) * multiplier[side];
+                        nextDoublePos[side] += new Vector3(dominoHalfSize[0] + dominoHalfSize[1], 0, 0) * multiplier[side];
+                    }
+
+                    spaceOnTable[side] += (dominoHalfSize[0] * 2);
+
                 }
                 else
                 {
-                    nextStandardPos[side] += ((new Vector3(dominoHalfSize[0], 0, 0) * 2) * multiplier[side]);
-                    nextDoublePos[side] += ((new Vector3(dominoHalfSize[0], 0, 0) + new Vector3(dominoHalfSize[1], 0, 0)) * multiplier[side]);
-                }
-                
-                spaceOnTable[side] += (dominoHalfSize[0] * 2);
+                    if (curSection[side] % 2 == 0)
+                    {
+                        nextStandardPos[side] += new Vector3(0, 0, dominoHalfSize[0] + dominoHalfSize[1]) * multiplier[side];
+                        spaceOnTable[side] += (dominoHalfSize[1] * 2);
+                    }
+                    else
+                    {
+                        nextStandardPos[side] += new Vector3(dominoHalfSize[0] + dominoHalfSize[1], 0, 0) * multiplier[side];
+                        spaceOnTable[side] += (dominoHalfSize[1] * 2);
+                    }
 
-            }
-            else
-            {
-                if (curSection[side] % 2 == 0)
-                {
-                    nextStandardPos[side] += ((new Vector3(dominoHalfSize[0], 0, 0) + new Vector3(dominoHalfSize[1], 0, 0)) * multiplier[side]);
-                    spaceOnTable[side] += (dominoHalfSize[1] * 2);
                 }
-                else
-                {
-                    nextStandardPos[side] += ((new Vector3(dominoHalfSize[0], 0, 0) + new Vector3(dominoHalfSize[1], 0, 0)) * multiplier[side]);
-                    spaceOnTable[side] += (dominoHalfSize[1] * 2);
-                }
-                
             }
+
+
+
+            
         }
         else
         {
