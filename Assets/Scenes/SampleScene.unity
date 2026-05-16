@@ -473,6 +473,8 @@ MonoBehaviour:
   - 0.28
   - 0.135
   numDominoesPlayed: 0
+  dominosPlayed: []
+  anchorPoint: 1.5
   domsPlayedPerSide: 0000000000000000
   spaceOnTable:
   - 0
@@ -492,6 +494,9 @@ MonoBehaviour:
   currentValuesOnField: 0000000000000000
   multiplier: 01000000ffffffff
   curSection: 0000000000000000
+  prevDomWasDouble: 0000
+  specCirc1: 0000
+  specCirc2: 0000
   sizeLimiter:
   - 2.52
   - 1.26

@@ -1,5 +1,7 @@
 using JetBrains.Annotations;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -18,6 +20,8 @@ public class DominoField : MonoBehaviour
 
     [Header("Current Field Stats")]
     [SerializeField] private int numDominoesPlayed;
+    [SerializeField] private Vector3[] dominosPlayed;
+    [SerializeField] private float anchorPoint;
     [SerializeField] private int[] domsPlayedPerSide;       // 0 is pos z, 1 is neg z
     [SerializeField] private float[] spaceOnTable;          // "
     [SerializeField] private Vector3[] nextStandardPos;     // "
@@ -27,6 +31,11 @@ public class DominoField : MonoBehaviour
     [SerializeField] private int[] currentValuesOnField;    // "
     [SerializeField] private int[] multiplier;              // "
     [SerializeField] private int[] curSection;              // "
+    [SerializeField] private bool[] prevDomWasDouble;       // "
+
+    [SerializeField] private bool[] specCirc1;       //whether the second to last domino in a LONG section was a standard domino or not.
+    [SerializeField] private bool[] specCirc2;       //whether the second to last domino in a SHORT section was a standard domino or not.
+
 
     [Tooltip("how far along can the dominoes go before they are forced to turn. 0 is the longer sections, 1 is the shorter sections")]
     [SerializeField] private float[] sizeLimiter;
@@ -48,27 +57,32 @@ public class DominoField : MonoBehaviour
         if (Keyboard.current.eKey.wasPressedThisFrame)
         {
             StartCoroutine(PlayDomino(standardDom, 0));
-            print("e key down, play standard on side 0");
+            //print("e key down, play standard on side 0");
         }
         else if (Keyboard.current.rKey.wasPressedThisFrame)
         {
             StartCoroutine(PlayDomino(standardDom, 1));
-            print("r key down, play standard on side 1");
+            //print("r key down, play standard on side 1");
         }
         else if (Keyboard.current.fKey.wasPressedThisFrame)
         {
             StartCoroutine(PlayDomino(doubleDom, 1));
-            print("f key down, play double on side 1");
+            //print("f key down, play double on side 1");
         }
         else if (Keyboard.current.dKey.wasPressedThisFrame)
         {
             StartCoroutine(PlayDomino(doubleDom, 0));
-            print("d key down, play double on side 0");
+            //print("d key down, play double on side 0");
         }
     }
 
     public IEnumerator PlayDomino(Vector3 domino, int side)
     {
+        List<Vector3> tempDomsPlayed = new List<Vector3>();
+        for (int i = 0; i < dominosPlayed.Length; i++) 
+        {
+            tempDomsPlayed.Add(dominosPlayed[i]);
+        }
         numDominoesPlayed++;
         domsPlayedPerSide[side]++;
         bool firstDom = false;
@@ -171,9 +185,20 @@ public class DominoField : MonoBehaviour
             
         }
 
+        tempDomsPlayed.Add(newDomino.transform.localPosition);
+        Vector3 tempAvg = Vector3.zero;
+        for(int i = 0; i < tempDomsPlayed.Count; i++)
+        {
+            tempAvg += tempDomsPlayed[i];
+        }
+        tempAvg = new Vector3((tempAvg.x / tempDomsPlayed.Count) * -1, 0, 0);
+        if (Mathf.Abs(tempAvg.x) >= anchorPoint)
+        {
+            this.transform.position = tempAvg;
+        }
+        dominosPlayed = tempDomsPlayed.ToArray();
+
         // figure out where the next domino is gonna go ////////////////////////
-        Vector3 posAdditive = Vector3.zero;
-        Vector3 rotAdditive = Vector3.zero;
 
         
 
@@ -181,7 +206,7 @@ public class DominoField : MonoBehaviour
         {
             if (curSection[side] % 2 == 0 && spaceOnTable[side] + (2 * dominoHalfSize[0]) + dominoHalfSize[1] >= sizeLimiter[0]) // if the current section is LONG and its OVER the long limit
             {
-                
+                print("Long section " + curSection[side] + " on side " + side);
                 curSection[side]++;
                 spaceOnTable[side] = 0;
 
@@ -206,20 +231,25 @@ public class DominoField : MonoBehaviour
 
                 if (isDouble)
                 {
-                    
+                    print("was a double");
+                    nextStandardRot[side] += new Vector3(0, 90 * tempMult, 0);
+                    nextStandardPos[side] = newDomino.transform.localPosition + new Vector3(dominoHalfSize[0] * 2 * multiplier[side], 0, 0);
+                    nextDoubleRot[side] += new Vector3(0, 90, 0);
                 }
                 else
                 {
-                    nextStandardRot[side] += new Vector3(0, 90 + (90 * curSection[side]), 0);
+                    print("wasn't a double");
+                    nextStandardRot[side] += new Vector3(0, 90 * tempMult, 0);
                     nextStandardPos[side] = newDomino.transform.localPosition + new Vector3(dominoHalfSize[1] * multiplier[side], 0, (dominoHalfSize[0] + dominoHalfSize[1]) * tempMult);
                     nextDoublePos[side] = newDomino.transform.localPosition + new Vector3(0, 0, (dominoHalfSize[0] + dominoHalfSize[1]) * tempMult);
+                    specCirc1[side] = true;
                 }
                 
 
             }
             else if (curSection[side] % 2 == 1 && spaceOnTable[side] + (2 * dominoHalfSize[0]) + dominoHalfSize[1] >= sizeLimiter[1]) // or if the current section is SHORT and its OVER the short limit
             {
-                
+                print("Short section " + curSection[side] + " on side " + side);
                 curSection[side]++;
                 spaceOnTable[side] = -1 * sizeLimiter[0];
 
@@ -245,13 +275,18 @@ public class DominoField : MonoBehaviour
 
                 if (isDouble)
                 {
-
+                    print("was a double");
+                    nextStandardPos[side] = newDomino.transform.localPosition + new Vector3(0, 0, dominoHalfSize[0] * 2 * multiplier[side]);
+                    nextStandardRot[side] += new Vector3(0, (90 * multiplier[side]) + 180, 0);
+                    nextDoubleRot[side] += new Vector3(0, 90, 0);
                 }
                 else
                 {
+                    print("wasn't a double");
                     nextStandardRot[side] += new Vector3(0, (90 * multiplier[side]) + 180, 0);
                     nextStandardPos[side] = newDomino.transform.localPosition + new Vector3(dominoHalfSize[1] * tempMult, 0, 0.415f * multiplier[side]);
                     nextDoublePos[side] = newDomino.transform.localPosition + new Vector3((dominoHalfSize[0] + dominoHalfSize[1]) * tempMult, 0, 0);
+                    specCirc2[side] = true;
                 }
                 
 
@@ -260,6 +295,20 @@ public class DominoField : MonoBehaviour
             {
                 nextStandardPos[side] = newDomino.transform.localPosition;
                 nextDoublePos[side] = newDomino.transform.localPosition;
+
+                if (specCirc1[side]) 
+                { 
+                    nextDoubleRot[side] += new Vector3(0, 90, 0);
+                    nextStandardPos[side].x += multiplier[side] * 0.15f;
+                    specCirc1[side] = false; 
+                }
+                else if (specCirc2[side]) 
+                { 
+                    nextDoubleRot[side] += new Vector3(0, 90, 0);
+                    nextStandardPos[side].z += multiplier[side] * 0.15f;
+                    specCirc2[side] = false; 
+                }
+
 
                 if (!isDouble)
                 {
@@ -315,6 +364,15 @@ public class DominoField : MonoBehaviour
                 spaceOnTable[1] += dominoHalfSize[1];
                 spaceOnTable[0] += dominoHalfSize[1];
             }
+        }
+
+        if (isDouble)
+        {
+            prevDomWasDouble[side] = true;
+        }
+        else
+        {
+            prevDomWasDouble[side] = false;
         }
         
 
