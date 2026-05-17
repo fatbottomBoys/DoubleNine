@@ -19,7 +19,7 @@ public class DominoField : MonoBehaviour
     public float[] dominoHalfSize;
 
     [Header("Current Field Stats")]
-    [SerializeField] private int numDominoesPlayed;
+    public int numDominoesPlayed;
     [SerializeField] private Vector3[] dominosPlayed;
     [SerializeField] private float anchorPoint;
     [SerializeField] private int[] domsPlayedPerSide;       // 0 is pos z, 1 is neg z

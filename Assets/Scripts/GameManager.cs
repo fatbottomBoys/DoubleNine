@@ -26,24 +26,25 @@ public class GameManager : NetworkBehaviour
     [Tooltip("x and y = values of the domino, z = whether its been played or not")]
     public Vector3[] allDominoes;
     public Vector3[] shuffledDominoes;
+    public Vector3[][] playerDominoes;
 
     [Header("Game Start stuff")]
-    public Vector3[] camPos;
-    public Vector3[] camRot;
-    [SerializeField] private AnimationCurve camAnimFlow;
-    public float camAnimTime;
-    public float animFrameRate;
     [SerializeField]private MultiplayerUI m_multiplayerUI;
 
     
 
 
 
-    void Start()
+    public void Awake()
     {
+        playerDominoes = new Vector3[4][];
+        for(int i = 0; i < 4; i++)
+        {
+            playerDominoes[i] = new Vector3[10]; 
+        }
+
         PopulateDominoes();
         DistributeDominoes();
-        StartCoroutine(StartGame());
 
         //initialize debug multiplayer connectivity
         if(m_multiplayerUI != null)
@@ -132,16 +133,13 @@ public class GameManager : NetworkBehaviour
             }                                               //
         }                                                   
         
-        for(int i = 0; i < 4; i++)                                              // Finally, tell the player script 
-        {                                                                       // what dominoes it has,
-            List<Vector3> tempDoms = new List<Vector3>();                       //
+        for(int i = 0; i < 4; i++)                                              // Finally, fill the player dominos list
+        {                                                                       //
             for(int j  = 0; j < 10; j++)                                        //
             {                                                                   //
-                tempDoms.Add(shuffledDominoes[(10 * i) + j]);                   //
-            }                                                                   //
-            Player playerStats = players[i].transform.GetComponent<Player>();   //
-            playerStats.myDominoValues = tempDoms.ToArray();                    //
-            playerStats.PopLocalDominoes();                                     // and tell it to populate its dominoes
+                playerDominoes[i][j] = shuffledDominoes[(10 * i) + j];          //
+                
+            }
         }
 
     }
@@ -168,26 +166,6 @@ public class GameManager : NetworkBehaviour
             shuffledDoms[n] = value;                                        //
         }                                                                   //
         return shuffledDoms.ToArray();
-    }
-
-    public IEnumerator StartGame()
-    {
-        yield return new WaitForEndOfFrame();
-        for(int i = 0; i < camAnimTime * animFrameRate; i++)
-        {
-            float t = i / (camAnimTime * animFrameRate);
-
-            for (int j = 0; j < 4; j++)
-            {
-                Player playerStats = players[j].transform.GetComponent<Player>();
-                playerStats.frontCam.transform.localPosition = Vector3.Lerp(camPos[0], camPos[1], camAnimFlow.Evaluate(t));
-                playerStats.frontCam.transform.localRotation = Quaternion.Lerp(Quaternion.Euler(camRot[0]), Quaternion.Euler(camRot[1]), camAnimFlow.Evaluate(t));
-            }
-
-            yield return new WaitForFixedUpdate();
-        }
-
-        yield break;
     }
 
 }
