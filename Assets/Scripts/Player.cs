@@ -17,6 +17,8 @@ public class Player : MonoBehaviour
     public GameObject myDominoField;
     public GameObject baseDomino;
     public Texture2D[] dominoTextures;
+    public DominoField mainDominoField;
+    public int[] dominosOnField;
 
     [Header("My cameras")]
     public GameObject frontCam;
@@ -45,8 +47,35 @@ public class Player : MonoBehaviour
         myDominoes = tempDoms.ToArray();
     }
 
+    public void CheckPlayableTiles()
+    {
+        dominosOnField = mainDominoField.getCurrentValuesOnField();
+        int left = dominosOnField[0];
+        int right = dominosOnField[1];
+
+        for(int i = 0; i < myDominoValues.Length; i++)
+        {
+            if (myDominoValues[i].x != left || myDominoValues[i].y != left || myDominoValues[i].x != right || myDominoValues[i].y != right)
+            {
+                Material[] dominoe = myDominoes[i].transform.GetChild(0).transform.GetComponent<MeshRenderer>().materials;
+                for (int j = 0; j < dominoe.Length; j++)
+                {
+                    dominoe[j].color = new Color(1,1,1,0.25f);
+                }
+            }
+
+        }
+    }
+
+    public void Update()
+    {
+        CheckPlayableTiles();
+    }
+
+
     public void PlayTile()
     {
+        
 
     }
 }

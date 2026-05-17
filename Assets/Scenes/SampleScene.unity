@@ -656,6 +656,10 @@ PrefabInstance:
       propertyPath: gameManager
       value: 
       objectReference: {fileID: 1287201952}
+    - target: {fileID: 5160870307736604854, guid: fd685ff55fc2e7b4aa0d39373158aa3b, type: 3}
+      propertyPath: mainDominoField
+      value: 
+      objectReference: {fileID: 933426545}
     - target: {fileID: 5920261312698831816, guid: fd685ff55fc2e7b4aa0d39373158aa3b, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -741,6 +745,10 @@ PrefabInstance:
       propertyPath: gameManager
       value: 
       objectReference: {fileID: 1287201952}
+    - target: {fileID: 5160870307736604854, guid: fd685ff55fc2e7b4aa0d39373158aa3b, type: 3}
+      propertyPath: mainDominoField
+      value: 
+      objectReference: {fileID: 933426545}
     - target: {fileID: 5920261312698831816, guid: fd685ff55fc2e7b4aa0d39373158aa3b, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -946,6 +954,10 @@ PrefabInstance:
       propertyPath: gameManager
       value: 
       objectReference: {fileID: 1287201952}
+    - target: {fileID: 5160870307736604854, guid: fd685ff55fc2e7b4aa0d39373158aa3b, type: 3}
+      propertyPath: mainDominoField
+      value: 
+      objectReference: {fileID: 933426545}
     - target: {fileID: 7323684938095000101, guid: fd685ff55fc2e7b4aa0d39373158aa3b, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -1032,6 +1044,10 @@ PrefabInstance:
       propertyPath: gameManager
       value: 
       objectReference: {fileID: 1287201952}
+    - target: {fileID: 5160870307736604854, guid: fd685ff55fc2e7b4aa0d39373158aa3b, type: 3}
+      propertyPath: mainDominoField
+      value: 
+      objectReference: {fileID: 933426545}
     - target: {fileID: 5920261312698831816, guid: fd685ff55fc2e7b4aa0d39373158aa3b, type: 3}
       propertyPath: m_Enabled
       value: 0

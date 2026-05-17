@@ -407,6 +407,11 @@ public class DominoField : MonoBehaviour
         yield return new WaitForFixedUpdate();
     }
 
+    public int[] getCurrentValuesOnField()
+    {
+        return currentValuesOnField;
+    }
+
     // Tester Functions
 
 
