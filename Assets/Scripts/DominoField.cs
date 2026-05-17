@@ -54,25 +54,24 @@ public class DominoField : MonoBehaviour
 
     public void Update()
     {
-        if (Keyboard.current.eKey.wasPressedThisFrame)
+        if(numDominoesPlayed <= 40)
         {
-            StartCoroutine(PlayDomino(standardDom, 0));
-            //print("e key down, play standard on side 0");
-        }
-        else if (Keyboard.current.rKey.wasPressedThisFrame)
-        {
-            StartCoroutine(PlayDomino(standardDom, 1));
-            //print("r key down, play standard on side 1");
-        }
-        else if (Keyboard.current.fKey.wasPressedThisFrame)
-        {
-            StartCoroutine(PlayDomino(doubleDom, 1));
-            //print("f key down, play double on side 1");
-        }
-        else if (Keyboard.current.dKey.wasPressedThisFrame)
-        {
-            StartCoroutine(PlayDomino(doubleDom, 0));
-            //print("d key down, play double on side 0");
+            if (Keyboard.current.eKey.wasPressedThisFrame)
+            {
+                StartCoroutine(PlayDomino(standardDom, 0));
+            }
+            else if (Keyboard.current.rKey.wasPressedThisFrame)
+            {
+                StartCoroutine(PlayDomino(standardDom, 1));
+            }
+            else if (Keyboard.current.fKey.wasPressedThisFrame)
+            {
+                StartCoroutine(PlayDomino(doubleDom, 1));
+            }
+            else if (Keyboard.current.dKey.wasPressedThisFrame)
+            {
+                StartCoroutine(PlayDomino(doubleDom, 0));
+            }
         }
     }
 
@@ -200,13 +199,22 @@ public class DominoField : MonoBehaviour
 
         // figure out where the next domino is gonna go ////////////////////////
 
-        
+        if (isDouble)
+        {
+            prevDomWasDouble[side] = true;
+        }
+        else
+        {
+            prevDomWasDouble[side] = false;
+        }
+
+
 
         if (!firstDom)
         {
             if (curSection[side] % 2 == 0 && spaceOnTable[side] + (2 * dominoHalfSize[0]) + dominoHalfSize[1] >= sizeLimiter[0]) // if the current section is LONG and its OVER the long limit
             {
-                print("Long section " + curSection[side] + " on side " + side);
+                print("Long section " + curSection[side] + " on side " + side + "'s second to last tile...");
                 curSection[side]++;
                 spaceOnTable[side] = 0;
 
@@ -249,7 +257,7 @@ public class DominoField : MonoBehaviour
             }
             else if (curSection[side] % 2 == 1 && spaceOnTable[side] + (2 * dominoHalfSize[0]) + dominoHalfSize[1] >= sizeLimiter[1]) // or if the current section is SHORT and its OVER the short limit
             {
-                print("Short section " + curSection[side] + " on side " + side);
+                print("Short section " + curSection[side] + " on side " + side + "'s second to last tile...");
                 curSection[side]++;
                 spaceOnTable[side] = -1 * sizeLimiter[0];
 
@@ -296,17 +304,47 @@ public class DominoField : MonoBehaviour
                 nextStandardPos[side] = newDomino.transform.localPosition;
                 nextDoublePos[side] = newDomino.transform.localPosition;
 
-                if (specCirc1[side]) 
-                { 
+                if (specCirc1[side] && prevDomWasDouble[side])
+                {
                     nextDoubleRot[side] += new Vector3(0, 90, 0);
                     nextStandardPos[side].x += multiplier[side] * 0.15f;
-                    specCirc1[side] = false; 
+                    specCirc1[side] = false;
                 }
-                else if (specCirc2[side]) 
-                { 
+                else if (specCirc2[side] && prevDomWasDouble[side])
+                {
                     nextDoubleRot[side] += new Vector3(0, 90, 0);
                     nextStandardPos[side].z += multiplier[side] * 0.15f;
-                    specCirc2[side] = false; 
+                    specCirc2[side] = false;
+                }
+                else if (specCirc1[side])
+                {
+                    if (isDouble)
+                    {
+                        nextDoubleRot[side] += new Vector3(0, 90, 0);
+                        nextStandardPos[side].x += multiplier[side] * 0.15f;
+                        specCirc1[side] = false;
+                    }
+                    else
+                    {
+                        nextDoubleRot[side] += new Vector3(0, 90, 0);
+                        specCirc1[side] = false;
+                    }
+                    
+                }
+                else if (specCirc2[side])
+                {
+                    if (isDouble)
+                    {
+                        nextDoubleRot[side] += new Vector3(0, 90, 0);
+                        nextStandardPos[side].z += multiplier[side] * 0.15f;
+                        specCirc2[side] = false;
+                    }
+                    else
+                    {
+                        nextDoubleRot[side] += new Vector3(0, 90, 0);
+                        specCirc2[side] = false;
+                    }
+                    
                 }
 
 
@@ -365,17 +403,6 @@ public class DominoField : MonoBehaviour
                 spaceOnTable[0] += dominoHalfSize[1];
             }
         }
-
-        if (isDouble)
-        {
-            prevDomWasDouble[side] = true;
-        }
-        else
-        {
-            prevDomWasDouble[side] = false;
-        }
-        
-
 
         yield return new WaitForFixedUpdate();
     }
