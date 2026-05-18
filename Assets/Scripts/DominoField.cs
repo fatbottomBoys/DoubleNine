@@ -6,8 +6,9 @@ using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Unity.Netcode;
 
-public class DominoField : MonoBehaviour
+public class DominoField : NetworkBehaviour
 {
 
     public GameManager gM;

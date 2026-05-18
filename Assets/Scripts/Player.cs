@@ -99,7 +99,7 @@ public class Player : NetworkBehaviour
         mainDominoField = dF.transform.GetComponent<DominoField>();
 
         List<GameObject> tempPlayers = new List<GameObject>();
-        if (tempPlayers != null) 
+        if (gameManager.players.Length > 0) 
         { 
             for(int i = 0;i < gameManager.players.Length; i++)
             {
@@ -117,7 +117,10 @@ public class Player : NetworkBehaviour
             tempPlayers.Add(this.transform.gameObject);
             gameManager.players = tempPlayers.ToArray();
         }
+        this.gameObject.transform.rotation = Quaternion.Euler(0, 90 * playerID, 0); 
+
         myDominoField.transform.parent = null;
+        myDominoField.name = "Player" + (playerID + 1) + "_DomnioField";
         this.gameObject.name = "Player" + (playerID + 1);
 
         List<Vector3> tempValues = new List<Vector3>();

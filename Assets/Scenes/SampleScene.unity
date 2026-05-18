@@ -119,6 +119,191 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &363531742
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 363531747}
+  - component: {fileID: 363531746}
+  - component: {fileID: 363531745}
+  - component: {fileID: 363531744}
+  - component: {fileID: 363531743}
+  - component: {fileID: 363531748}
+  m_Layer: 0
+  m_Name: Cube
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &363531743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 363531742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 1438781190
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 0
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
+--- !u!65 &363531744
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 363531742}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &363531745
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 363531742}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &363531746
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 363531742}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &363531747
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 363531742}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.68, y: 0.688, z: 2.74}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &363531748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 363531742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkTransform
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkTransformExpanded: 0
+  AutoOwnerAuthorityTickOffset: 1
+  PositionInterpolationType: 0
+  RotationInterpolationType: 0
+  ScaleInterpolationType: 0
+  PositionLerpSmoothing: 1
+  PositionMaxInterpolationTime: 0.1
+  RotationLerpSmoothing: 1
+  RotationMaxInterpolationTime: 0.1
+  ScaleLerpSmoothing: 1
+  ScaleMaxInterpolationTime: 0.1
+  AuthorityMode: 1
+  TickSyncChildren: 0
+  UseUnreliableDeltas: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 1
+  SyncScaleY: 1
+  SyncScaleZ: 1
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 0
+  SwitchTransformSpaceWhenParented: 0
+  Interpolate: 1
+  SlerpPosition: 0
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -402,96 +587,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &933426543
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 933426544}
-  - component: {fileID: 933426545}
-  m_Layer: 0
-  m_Name: DominoField
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &933426544
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 933426543}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &933426545
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 933426543}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e7d684709eb713438967417dff5b254, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DominoField
-  gM: {fileID: 1287201952}
-  dominoPrefab: {fileID: 6586889422081284681, guid: 726927bdebcb56549aaaec940c87cd72, type: 3}
-  dominoTextures:
-  - {fileID: 2800000, guid: ddaee65964d15034aaddfd1fc4404232, type: 3}
-  - {fileID: 2800000, guid: b71687fa46913ec49bf2f67635e15395, type: 3}
-  - {fileID: 2800000, guid: 81b1cffeba74c364781ea92fca862cbc, type: 3}
-  - {fileID: 2800000, guid: b28ee1d218bd2f94b8ea1f1e441a542c, type: 3}
-  - {fileID: 2800000, guid: 12729430e1105374ca81c16570f17579, type: 3}
-  - {fileID: 2800000, guid: b85799425f7c28d4ca20e8b41795667a, type: 3}
-  - {fileID: 2800000, guid: 08f11cf8dafe1ed49be5a6d87ddd8f0e, type: 3}
-  - {fileID: 2800000, guid: a4fe975ebe81c864998ec9aa41b18691, type: 3}
-  - {fileID: 2800000, guid: d49eb7a7823fb1e4fbf53a8d3cc01a21, type: 3}
-  - {fileID: 2800000, guid: 1bd2d28df9efc5f4795674135d42ee09, type: 3}
-  dominoHalfSize:
-  - 0.28
-  - 0.135
-  numDominoesPlayed: 0
-  dominosPlayed: []
-  anchorPoint: 1.5
-  domsPlayedPerSide: 0000000000000000
-  spaceOnTable:
-  - 0
-  - 0
-  nextStandardPos:
-  - {x: 0, y: 0.237, z: 0}
-  - {x: 0, y: 0.237, z: 0}
-  nextStandardRot:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  nextDoublePos:
-  - {x: 0, y: 0.237, z: 0}
-  - {x: 0, y: 0.237, z: 0}
-  nextDoubleRot:
-  - {x: 0, y: 90, z: 0}
-  - {x: 0, y: 90, z: 0}
-  currentValuesOnField: 0000000000000000
-  multiplier: 01000000ffffffff
-  curSection: 0000000000000000
-  prevDomWasDouble: 0000
-  specCirc1: 0000
-  specCirc2: 0000
-  sizeLimiter:
-  - 2.52
-  - 1.26
-  doubleDom: {x: 9, y: 9, z: 0}
-  standardDom: {x: 9, y: 0, z: 0}
 --- !u!1001 &982792520
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -618,46 +713,13 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1287201950
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1287201951}
-  - component: {fileID: 1287201953}
-  - component: {fileID: 1287201952}
-  m_Layer: 0
-  m_Name: GameManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1287201951
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1287201950}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1287201952
+--- !u!114 &2004366724519614472
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1287201950}
+  m_GameObject: {fileID: 6308674991084605029}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fa9b35e65a71046459b4e757d051fde8, type: 3}
@@ -667,25 +729,101 @@ MonoBehaviour:
   players: []
   firstPlayer: 0
   curPlayerTurn: 0
-  dominoField: {fileID: 933426543}
+  dominoField: {fileID: 4681891842771915477}
   playableEnds: 
   allDominoes: []
   shuffledDominoes: []
   m_multiplayerUI: {fileID: 1127406402}
---- !u!114 &1287201953
+--- !u!114 &3810783530766517247
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1287201950}
+  m_GameObject: {fileID: 4681891842771915477}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2677486376
-  InScenePlacedSourceGlobalObjectIdHash: 0
+  GlobalObjectIdHash: 374925979
+  InScenePlacedSourceGlobalObjectIdHash: 3194259573
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 1
+  SceneMigrationSynchronization: 0
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
+--- !u!1 &4681891842771915477
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8858029381933124597}
+  - component: {fileID: 3810783530766517247}
+  - component: {fileID: 9105074140979420559}
+  m_Layer: 0
+  m_Name: DominoField
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &6308674991084605029
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8273320393821905638}
+  - component: {fileID: 8574187778788709739}
+  - component: {fileID: 2004366724519614472}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8273320393821905638
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6308674991084605029}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8574187778788709739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6308674991084605029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 1923585507
+  InScenePlacedSourceGlobalObjectIdHash: 81588245
   DeferredDespawnTick: 0
   Ownership: 1
   AlwaysReplicateAsRoot: 0
@@ -697,6 +835,80 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
+--- !u!4 &8858029381933124597
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4681891842771915477}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9105074140979420559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4681891842771915477}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e7d684709eb713438967417dff5b254, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DominoField
+  ShowTopMostFoldoutHeaderGroup: 1
+  gM: {fileID: 2004366724519614472}
+  dominoPrefab: {fileID: 6586889422081284681, guid: 726927bdebcb56549aaaec940c87cd72, type: 3}
+  dominoTextures:
+  - {fileID: 2800000, guid: ddaee65964d15034aaddfd1fc4404232, type: 3}
+  - {fileID: 2800000, guid: b71687fa46913ec49bf2f67635e15395, type: 3}
+  - {fileID: 2800000, guid: 81b1cffeba74c364781ea92fca862cbc, type: 3}
+  - {fileID: 2800000, guid: b28ee1d218bd2f94b8ea1f1e441a542c, type: 3}
+  - {fileID: 2800000, guid: 12729430e1105374ca81c16570f17579, type: 3}
+  - {fileID: 2800000, guid: b85799425f7c28d4ca20e8b41795667a, type: 3}
+  - {fileID: 2800000, guid: 08f11cf8dafe1ed49be5a6d87ddd8f0e, type: 3}
+  - {fileID: 2800000, guid: a4fe975ebe81c864998ec9aa41b18691, type: 3}
+  - {fileID: 2800000, guid: d49eb7a7823fb1e4fbf53a8d3cc01a21, type: 3}
+  - {fileID: 2800000, guid: 1bd2d28df9efc5f4795674135d42ee09, type: 3}
+  dominoHalfSize:
+  - 0.28
+  - 0.135
+  numDominoesPlayed: 0
+  dominosPlayed: []
+  anchorPoint: 1.5
+  domsPlayedPerSide: 0000000000000000
+  spaceOnTable:
+  - 0
+  - 0
+  nextStandardPos:
+  - {x: 0, y: 0.237, z: 0}
+  - {x: 0, y: 0.237, z: 0}
+  nextStandardRot:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  nextDoublePos:
+  - {x: 0, y: 0.237, z: 0}
+  - {x: 0, y: 0.237, z: 0}
+  nextDoubleRot:
+  - {x: 0, y: 90, z: 0}
+  - {x: 0, y: 90, z: 0}
+  currentValuesOnField: 0000000000000000
+  multiplier: 01000000ffffffff
+  curSection: 0000000000000000
+  prevDomWasDouble: 0000
+  specCirc1: 0000
+  specCirc2: 0000
+  sizeLimiter:
+  - 2.52
+  - 1.26
+  doubleDom: {x: 9, y: 9, z: 0}
+  standardDom: {x: 9, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -704,7 +916,8 @@ SceneRoots:
   - {fileID: 410087041}
   - {fileID: 832575519}
   - {fileID: 982792520}
-  - {fileID: 1287201951}
-  - {fileID: 933426544}
+  - {fileID: 8273320393821905638}
   - {fileID: 734008696}
   - {fileID: 1127406404}
+  - {fileID: 8858029381933124597}
+  - {fileID: 363531747}
