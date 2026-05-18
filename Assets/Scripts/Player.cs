@@ -27,6 +27,7 @@ public class Player : NetworkBehaviour
     [SerializeField] private Vector3[] dominoPositions;
     [SerializeField] private int[] reposArray;
     [SerializeField] private bool triggerRepos;
+    public GameObject baseDominoField;
     public GameObject myDominoField;
     public GameObject baseDomino;
     public Texture2D[] dominoTextures;
@@ -117,10 +118,15 @@ public class Player : NetworkBehaviour
             tempPlayers.Add(this.transform.gameObject);
             gameManager.players = tempPlayers.ToArray();
         }
-        this.gameObject.transform.rotation = Quaternion.Euler(0, 90 * playerID, 0); 
 
-        myDominoField.transform.parent = null;
-        myDominoField.name = "Player" + (playerID + 1) + "_DomnioField";
+        this.gameObject.transform.rotation = Quaternion.Euler(0, 90 * playerID, 0); 
+        GameObject DFParent = GameObject.Instantiate(baseDominoField, this.gameObject.transform.position, this.gameObject.transform.rotation);
+        DFParent.name = "Player" + (playerID + 1) + "_DomnioField";
+        DFParent.GetComponent<NetworkObject>().Spawn();
+        myDominoField = DFParent.transform.GetChild(0).transform.gameObject;
+
+        //myDominoField.transform.parent = null;
+        myDominoField.name = "Player" + (playerID + 1) + "_DomnioField_Offset";
         this.gameObject.name = "Player" + (playerID + 1);
 
         List<Vector3> tempValues = new List<Vector3>();

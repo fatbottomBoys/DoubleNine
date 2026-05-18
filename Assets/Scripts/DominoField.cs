@@ -76,6 +76,11 @@ public class DominoField : NetworkBehaviour
         }
     }
 
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+    }
+
     public IEnumerator PlayDomino(Vector3 domino, int side)
     {
         List<Vector3> tempDomsPlayed = new List<Vector3>();
