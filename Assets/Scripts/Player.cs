@@ -50,12 +50,20 @@ public class Player : NetworkBehaviour
     [Header("Test stuff")]
     public GameObject vis;
 
-    public void Update()
+    public override void OnNetworkSpawn()
     {
-        if(playerID == -1)
+        if (playerID == -1)
         {
             LoadIn();
         }
+    }
+
+    public void Update()
+    {
+        //if(IsClient && Keyboard.current.qKey.wasPressedThisFrame)
+        //{
+            
+        //}
 
         if (IsOwner)
         {
@@ -91,7 +99,10 @@ public class Player : NetworkBehaviour
             frontCam.transform.GetComponent<Camera>().enabled = true;
             frontCam.transform.GetComponent<AudioListener>().enabled = true;
         }
+
         
+
+
 
         GameObject gM = GameObject.Find("GameManager");
         gameManager = gM.transform.GetComponent<GameManager>();
@@ -119,6 +130,27 @@ public class Player : NetworkBehaviour
             gameManager.players = tempPlayers.ToArray();
         }
 
+        //if (IsClient)
+        //{
+        //    PingRpc(playerID);
+        //}
+        //else
+        //{
+        //    List<Vector3> tempValues = new List<Vector3>();
+        //    for (int i = 0; i < 10; i++)
+        //    {
+        //        tempValues.Add(gameManager.playerDominoes[(playerID * 10) + i]);
+        //    }
+        //    myDominoValues = tempValues.ToArray();
+        //}
+
+        List<Vector3> tempValues = new List<Vector3>();
+        for (int i = 0; i < 10; i++)
+        {
+            tempValues.Add(gameManager.playerDominoes[(playerID * 10) + i]);
+        }
+        myDominoValues = tempValues.ToArray();
+
         this.gameObject.transform.rotation = Quaternion.Euler(0, 90 * playerID, 0); 
         GameObject DFParent = GameObject.Instantiate(baseDominoField, this.gameObject.transform.position, this.gameObject.transform.rotation);
         DFParent.name = "Player" + (playerID + 1) + "_DomnioField";
@@ -129,12 +161,7 @@ public class Player : NetworkBehaviour
         myDominoField.name = "Player" + (playerID + 1) + "_DomnioField_Offset";
         this.gameObject.name = "Player" + (playerID + 1);
 
-        List<Vector3> tempValues = new List<Vector3>();
-        for(int i = 0; i < 10; i++)
-        {
-            tempValues.Add(gameManager.playerDominoes[playerID][i]);
-        }
-        myDominoValues = tempValues.ToArray();
+        
 
         PopLocalDominoes();
         StartCoroutine(CamAnim());
@@ -328,6 +355,30 @@ public class Player : NetworkBehaviour
             return Vector3.zero;
         }
     }
+
+    //[Rpc(SendTo.Server)]
+    //public void PingRpc(int poID)
+    //{
+    //    // Server -> Clients because PongRpc sends to NotServer
+    //    // Note: This will send to all clients.
+    //    // Sending to the specific client that requested the pong will be discussed in the next section.
+    //    PongRpc(poID, gameManager.playerDominoes);
+    //}
+
+    //[Rpc(SendTo.NotServer)]
+    //void PongRpc(int pID, NetworkList<Vector3> pDoms)
+    //{
+    //    print($"Received playerID {pID} and first value {pDoms[pID * 10].x}, {pDoms[pID * 10].y}");
+
+    //    List<Vector3> tempValues = new List<Vector3>();
+    //    for (int i = 0; i < 10; i++)
+    //    {
+    //        tempValues.Add(pDoms[(playerID * 10) + i]);
+    //    }
+    //    myDominoValues = tempValues.ToArray();
+
+
+    //}
 
 
 

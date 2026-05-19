@@ -24,27 +24,22 @@ public class GameManager : NetworkBehaviour
 
     [Header("Dominoes")]
     [Tooltip("x and y = values of the domino, z = whether its been played or not")]
-    public Vector3[] allDominoes;
-    public Vector3[] shuffledDominoes;
-    public Vector3[][] playerDominoes;
+    public List<Vector3> allDominoes;
+    public List<Vector3> shuffledDominoes;
+    public NetworkList<Vector3> playerDominoes;
 
     [Header("Game Start stuff")]
     [SerializeField]private MultiplayerUI m_multiplayerUI;
 
-    
-
-
-
     public void Awake()
     {
-        playerDominoes = new Vector3[4][];
-        for(int i = 0; i < 4; i++)
+        playerDominoes = new NetworkList<Vector3>(new List<Vector3>(), NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+        if (!IsClient)
         {
-            playerDominoes[i] = new Vector3[10]; 
+            PopulateDominoes();
+            DistributeDominoes();
         }
-
-        PopulateDominoes();
-        DistributeDominoes();
+        
 
         //initialize debug multiplayer connectivity
         if(m_multiplayerUI != null)
@@ -94,7 +89,7 @@ public class GameManager : NetworkBehaviour
             }                                                                                                           //
         }                                                                                                               //
                                                                                                                         //
-        allDominoes = unshuffledDoms.ToArray();                                                                         //
+        allDominoes = unshuffledDoms;                                                                         //
     }
     public void DistributeDominoes()
     {
@@ -131,28 +126,25 @@ public class GameManager : NetworkBehaviour
                 verified = true;                            //
                 break;                                      //
             }                                               //
-        }                                                   
-        
-        for(int i = 0; i < 4; i++)                                              // Finally, fill the player dominos list
+        }
+
+
+        for (int i = 0; i < 40; i++)                                              // Finally, fill the player dominos list
         {                                                                       //
-            for(int j  = 0; j < 10; j++)                                        //
-            {                                                                   //
-                playerDominoes[i][j] = shuffledDominoes[(10 * i) + j];          //
-                
-            }
+            playerDominoes.Add(shuffledDominoes[i]);
         }
 
     }
-    private Vector3[] Shuffle(Vector3[] array)      // shuffles a Vector3 array
+    private List<Vector3> Shuffle(List<Vector3> array)      // shuffles a Vector3 array
     {                                               // if you know how to make this work for any type of array, be my guest.
         List<Vector3> shuffledDoms = new List<Vector3>();
-        for(int i = 0; i <  array.Length; i++)
+        for(int i = 0; i <  array.Count; i++)
         {
             shuffledDoms.Add(array[i]);
         }
 
 
-        int n = array.Length;                                               // Fisher-Yates Shuffle I found on the internet
+        int n = array.Count;                                               // Fisher-Yates Shuffle I found on the internet
         RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider(); // this shit is way above my paygrade
         while (n > 1)                                                       //
         {                                                                   //
@@ -165,8 +157,9 @@ public class GameManager : NetworkBehaviour
             shuffledDoms[k] = shuffledDoms[n];                              //
             shuffledDoms[n] = value;                                        //
         }                                                                   //
-        return shuffledDoms.ToArray();
+        return shuffledDoms;
     }
+
 
 
 }
