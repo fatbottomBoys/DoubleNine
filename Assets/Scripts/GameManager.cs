@@ -31,6 +31,10 @@ public class GameManager : NetworkBehaviour
     [Header("Game Start stuff")]
     [SerializeField]private MultiplayerUI m_multiplayerUI;
 
+    [Header("Test Stuff")]
+    public GameObject serverDomino;
+    public Vector3 dominoPos;
+
     public void Awake()
     {
         playerDominoes = new NetworkList<Vector3>(new List<Vector3>(), NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
@@ -38,7 +42,15 @@ public class GameManager : NetworkBehaviour
         {
             PopulateDominoes();
             DistributeDominoes();
+
+            
+            GameObject dom = GameObject.Instantiate(serverDomino);
+            dom.name = "TEST";
+            dom.transform.position = dominoPos;
+            dom.GetComponent<NetworkObject>().Spawn();
         }
+
+
         
 
         //initialize debug multiplayer connectivity
@@ -130,7 +142,7 @@ public class GameManager : NetworkBehaviour
 
 
         for (int i = 0; i < 40; i++)                                              // Finally, fill the player dominos list
-        {                                                                       //
+        {                                                                         //
             playerDominoes.Add(shuffledDominoes[i]);
         }
 

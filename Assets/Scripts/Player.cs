@@ -49,6 +49,7 @@ public class Player : NetworkBehaviour
 
     [Header("Test stuff")]
     public GameObject vis;
+    
 
     public override void OnNetworkSpawn()
     {
@@ -56,14 +57,16 @@ public class Player : NetworkBehaviour
         {
             LoadIn();
         }
+
+        
     }
 
     public void Update()
     {
-        //if(IsClient && Keyboard.current.qKey.wasPressedThisFrame)
-        //{
-            
-        //}
+        if (IsClient && Keyboard.current.qKey.wasPressedThisFrame)
+        {
+            PingRpc(playerID);
+        }
 
         if (IsOwner)
         {
@@ -71,7 +74,6 @@ public class Player : NetworkBehaviour
             {
                 CheckPlayableTiles();
             }
-            //vis.transform.position = CurMousePos();
 
             if (Mouse.current.leftButton.wasPressedThisFrame)   // need to figure out touch controls
             {                                                   // should be "Touchscreen.current. _____________
@@ -130,20 +132,6 @@ public class Player : NetworkBehaviour
             gameManager.players = tempPlayers.ToArray();
         }
 
-        //if (IsClient)
-        //{
-        //    PingRpc(playerID);
-        //}
-        //else
-        //{
-        //    List<Vector3> tempValues = new List<Vector3>();
-        //    for (int i = 0; i < 10; i++)
-        //    {
-        //        tempValues.Add(gameManager.playerDominoes[(playerID * 10) + i]);
-        //    }
-        //    myDominoValues = tempValues.ToArray();
-        //}
-
         List<Vector3> tempValues = new List<Vector3>();
         for (int i = 0; i < 10; i++)
         {
@@ -175,6 +163,7 @@ public class Player : NetworkBehaviour
         List<GameObject> tempDoms = new List<GameObject>();
         for (int i = 0; i < myDominoValues.Length; i++) 
         {
+            
             int myX = Mathf.RoundToInt(myDominoValues[i].x);
             int myY = Mathf.RoundToInt(myDominoValues[i].y);
             GameObject go = GameObject.Instantiate(baseDomino, myDominoField.transform);
@@ -356,29 +345,36 @@ public class Player : NetworkBehaviour
         }
     }
 
+    [Rpc(SendTo.Server)]
+    public void PingRpc(int player)
+    {
+        // Server -> Clients because PongRpc sends to NotServer
+        // Note: This will send to all clients.
+        // Sending to the specific client that requested the pong will be discussed in the next section.
+        PongRpc(player, "PONG!");
+        Debug.Log($"Received ping from player {player}");
+    }
+
+    [Rpc(SendTo.NotServer)]
+    void PongRpc(int player, string message)
+    {
+        Debug.Log($"Received pong from server originating from {player}");
+    }
+
     //[Rpc(SendTo.Server)]
-    //public void PingRpc(int poID)
+    //public void C2SDominoRpc(GameObject obj, GameObject virtualparent, string name)
     //{
-    //    // Server -> Clients because PongRpc sends to NotServer
-    //    // Note: This will send to all clients.
-    //    // Sending to the specific client that requested the pong will be discussed in the next section.
-    //    PongRpc(poID, gameManager.playerDominoes);
+    //    Debug.Log($"Received Domino spawn request from player {playerID}, sending request back");
+    //    S2CDominoRpc(obj);
     //}
 
     //[Rpc(SendTo.NotServer)]
-    //void PongRpc(int pID, NetworkList<Vector3> pDoms)
+    //public void S2CDominoRpc(GameObject newObj)
     //{
-    //    print($"Received playerID {pID} and first value {pDoms[pID * 10].x}, {pDoms[pID * 10].y}");
-
-    //    List<Vector3> tempValues = new List<Vector3>();
-    //    for (int i = 0; i < 10; i++)
-    //    {
-    //        tempValues.Add(pDoms[(playerID * 10) + i]);
-    //    }
-    //    myDominoValues = tempValues.ToArray();
-
-
+    //    Debug.Log($"Received Domino spawn request back from player {playerID}");
     //}
+
+    
 
 
 
