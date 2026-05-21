@@ -220,16 +220,17 @@ public class Player : NetworkBehaviour
     }
     public void GrabDomino()
     {
-
+        //I didn't know the reason for this function but I figured it was a selecting which domino to play kind of thing
+        // but I am currently not calling the play function just yet.
         //PlayDominoRpc(heldDomino);
     }
 
-    public void PlayLeft() 
+    public void PlayLeft()                                                                      //Ui trigger function for playing held domino on left side
     {
         mainDominoField.PlayDomino(heldDomino.transform.GetComponent<DominoStats>().myValue, 0);
     }
 
-    public void PlayRight()
+    public void PlayRight()                                                                      //Ui trigger function for playing held domino on right side
     {
         mainDominoField.PlayDomino(heldDomino.transform.GetComponent<DominoStats>().myValue, 1);
     }
@@ -241,7 +242,7 @@ public class Player : NetworkBehaviour
         int left = dominosOnField[0];
         int right = dominosOnField[1];
 
-        //take input domino object and send RPC to server to play
+        //take input domino object and check for playability
         DominoStats dominoObject = domino.transform.GetComponent<DominoStats>();
 
         if (dominoObject.myValue.x == left || dominoObject.myValue.x == right || dominoObject.myValue.y == right || dominoObject.myValue.y == left)
@@ -251,10 +252,12 @@ public class Player : NetworkBehaviour
         }
         else if(dominoObject.myValue.x == left || dominoObject.myValue.y == left)
         {
+            // may need to make an RPC here???
             mainDominoField.PlayDomino(dominoObject.myValue, 0);
         }
         else
         {
+            // may need to make an RPC here as well???
             mainDominoField.PlayDomino(dominoObject.myValue, 1);
         }
 

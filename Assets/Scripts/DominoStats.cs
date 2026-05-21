@@ -11,7 +11,7 @@ public class DominoStats : MonoBehaviour
 
     public void Start()
     {
-
+        isPlayable = true;
     }
 
 
