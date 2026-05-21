@@ -56,7 +56,7 @@ public class Player : NetworkBehaviour
     {
         if (playerID == -1)
         {
-            LoadIn();
+            StartCoroutine(LoadIn());
         }
 
         
@@ -64,41 +64,45 @@ public class Player : NetworkBehaviour
 
     public void Update()
     {
-        if (IsClient && Keyboard.current.qKey.wasPressedThisFrame)
+        if (playerID != -1) 
         {
-            PingRpc(playerID);
-        }
-
-        if (IsOwner)
-        {
-            if (mainDominoField.numDominoesPlayed != 0)
+            if (IsClient && Keyboard.current.qKey.wasPressedThisFrame)
             {
-                CheckPlayableTiles();
+                PingRpc(playerID);
             }
 
-            if (Mouse.current.leftButton.wasPressedThisFrame)   // need to figure out touch controls
-            {                                                   // should be "Touchscreen.current. _____________
-                if (ClickObj().transform.GetComponent<DominoStats>().isPlayable)
+            if (IsOwner)
+            {
+                if (mainDominoField.numDominoesPlayed != 0)
                 {
-                    heldDomino = ClickObj();
+                    CheckPlayableTiles();
                 }
-            }
-            else if (!Mouse.current.leftButton.isPressed && heldDomino != null)
-            {
-                heldDomino = null;
-                triggerRepos = true;
-            }
 
-            if(heldDomino != null)
-            {
-                heldDomino.transform.position = CurMousePos();
+                if (Mouse.current.leftButton.wasPressedThisFrame)   // need to figure out touch controls
+                {                                                   // should be "Touchscreen.current. _____________
+                    if (ClickObj().transform.GetComponent<DominoStats>().isPlayable)
+                    {
+                        heldDomino = ClickObj();
+                    }
+                }
+                else if (!Mouse.current.leftButton.isPressed && heldDomino != null)
+                {
+                    heldDomino = null;
+                    triggerRepos = true;
+                }
+
+                if (heldDomino != null)
+                {
+                    heldDomino.transform.position = CurMousePos();
+                }
+                ReposDominos();
             }
-            ReposDominos();
         }
     }
 
-    public void LoadIn()
+    public IEnumerator LoadIn()
     {
+        yield return new WaitForSeconds(2);
         if (IsOwner)
         {
             frontCam.SetActive(true);
@@ -106,7 +110,7 @@ public class Player : NetworkBehaviour
             frontCam.transform.GetComponent<AudioListener>().enabled = true;
         }
 
-        
+        AskForValuesRpc();
 
 
 
@@ -136,6 +140,13 @@ public class Player : NetworkBehaviour
             gameManager.players = tempPlayers.ToArray();
         }
 
+        gameManager.SendServerRequests();
+        while(gameManager.playerDominoes.Count < 40)
+        {
+            yield return new WaitForFixedUpdate();
+            Debug.Log("waiting for server to fill up GM's dominoes list");
+        }
+
         List<Vector3> tempValues = new List<Vector3>();
         for (int i = 0; i < 10; i++)
         {
@@ -144,19 +155,15 @@ public class Player : NetworkBehaviour
         myDominoValues = tempValues.ToArray();
 
         this.gameObject.transform.rotation = Quaternion.Euler(0, 90 * playerID, 0);
-        //GameObject DFParent = GameObject.Instantiate(baseDominoField, this.gameObject.transform.position, this.gameObject.transform.rotation);
-        //DFParent.name = "Player" + (playerID + 1) + "_DomnioField";
-        //DFParent.GetComponent<NetworkObject>().Spawn();
-        myDominoField = GameObject.Find("Player" + (playerID + 1) + "_DomnioField_Offset");
-
-        //myDominoField.transform.parent = null;
-        //myDominoField.name = "Player" + (playerID + 1) + "_DomnioField_Offset";
+        myDominoField = GameObject.Find("Player" + (playerID + 1) + "_DomnioField");
         this.gameObject.name = "Player" + (playerID + 1);
 
         
 
         PopLocalDominoes();
         StartCoroutine(CamAnim());
+
+
 
 
     }
@@ -185,6 +192,15 @@ public class Player : NetworkBehaviour
         //    tempDoms.Add(go);
         //}
         myDominoes = GameObject.FindGameObjectsWithTag($"P{playerID + 1}Dominoes");
+
+        for (int i = 0; i < 10; i++) 
+        {
+            DominoStats domStats = myDominoes[i].transform.GetComponent<DominoStats>();
+            Material[] myMat = myDominoes[i].transform.GetChild(0).transform.GetComponent<MeshRenderer>().materials;
+
+            myMat[1].mainTexture = dominoTextures[Mathf.RoundToInt(domStats.myValue.x)];
+            myMat[2].mainTexture = dominoTextures[Mathf.RoundToInt(domStats.myValue.y)];
+        }
 
     }
     public void CheckPlayableTiles()
@@ -291,7 +307,7 @@ public class Player : NetworkBehaviour
                 if (reposArray[i] != domID)
                 {
                     nonHeldDoms.Add(myDominoes[reposArray[i]]);
-                    print("Added domino at ID " + i);
+                    //print("Added domino at ID " + i);
                 }
                 
             }
@@ -407,18 +423,19 @@ public class Player : NetworkBehaviour
         Debug.Log($"Received pong from server originating from {player}");
     }
 
-    //[Rpc(SendTo.Server)]
-    //public void C2SDominoRpc(GameObject obj, GameObject virtualparent, string name)
-    //{
-    //    Debug.Log($"Received Domino spawn request from player {playerID}, sending request back");
-    //    S2CDominoRpc(obj);
-    //}
+    [Rpc(SendTo.Server)]
+    public void AskForValuesRpc()
+    {
+        SendValuesBackRpc(this.name);
+    }
 
-    //[Rpc(SendTo.NotServer)]
-    //public void S2CDominoRpc(GameObject newObj)
-    //{
-    //    Debug.Log($"Received Domino spawn request back from player {playerID}");
-    //}
+    [Rpc(SendTo.NotServer)]
+    public void SendValuesBackRpc(string name)
+    {
+        this.name = name;
+    }
+
+    
 
     
 

@@ -1,17 +1,68 @@
 using UnityEngine;
 using Unity.Netcode;
+using Unity.Collections;
+using System.Collections;
+using JetBrains.Annotations;
 
-public class DominoStats : MonoBehaviour
+public class DominoStats : NetworkBehaviour
 {
     public bool isActive;
     public Vector3 myValue;
+    public string myName;
+    public string myTag;
     public int myID;
+    public bool receivedResponse;
+
     public bool isDouble;
     public bool isPlayable;
+    public NetworkVariable<Vector3> myVirtualParentPos;
 
-    public void Start()
+    public void Awake()
     {
         isPlayable = true;
+
+        StartCoroutine(LoadIn());
+        
+    }
+
+    public IEnumerator LoadIn()
+    {
+        yield return new WaitForFixedUpdate();
+        yield return new WaitForFixedUpdate();
+
+        if (!IsHost)
+        {
+            receivedResponse = false;
+            WhatsMyNameRpc();
+            while (!receivedResponse)
+            {
+                yield return new WaitForFixedUpdate();
+                Debug.Log($"Domino{myID} waiting for response from server");
+            }
+        }
+        
+        
+        this.gameObject.name = myName.ToString();
+        this.gameObject.tag = myTag.ToString();
+
+        
+
+    }
+
+    [Rpc(SendTo.Server)]
+    public void WhatsMyNameRpc()
+    {
+        ThatsYourNameRpc(myName, myTag, myValue, myID);
+    }
+
+    [Rpc(SendTo.NotServer)]
+    public void ThatsYourNameRpc(string name, string tag, Vector3 value, int id)
+    {
+        myName = name;
+        myTag = tag;
+        receivedResponse = true;
+
+        myValue = value;
     }
 
 

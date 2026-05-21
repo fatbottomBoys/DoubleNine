@@ -1,10 +1,11 @@
 using NUnit.Framework;
-using Unity.Netcode;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using Unity.Collections;
+using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -26,7 +27,7 @@ public class GameManager : NetworkBehaviour
     [Tooltip("x and y = values of the domino, z = whether its been played or not")]
     public List<Vector3> allDominoes;
     public List<Vector3> shuffledDominoes;
-    public NetworkList<Vector3> playerDominoes;
+    public List<Vector3> playerDominoes;
     public GameObject playerDominoFieldBase;
     public GameObject[] playerDominoFields;
     public GameObject[][] serverPlayerDominoes;
@@ -41,25 +42,16 @@ public class GameManager : NetworkBehaviour
 
     public void Awake()
     {
-        playerDominoes = new NetworkList<Vector3>(new List<Vector3>(), NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-        //if (!IsClient)
-        //{
-        //    PopulateDominoes();
-        //    DistributeDominoes();
-        //    InstanceDominoes();
-
-            
-        //    GameObject dom = GameObject.Instantiate(serverDomino);
-        //    dom.name = "TEST";
-        //    dom.transform.position = dominoPos;
-        //    dom.GetComponent<NetworkObject>().Spawn();
-        //}
+        playerDominoes = new List<Vector3>();
 
 
         
 
+
+
+
         //initialize debug multiplayer connectivity
-        if(m_multiplayerUI != null)
+        if (m_multiplayerUI != null)
         {
             m_multiplayerUI.OnStartHost += StartHost;
             m_multiplayerUI.OnStartClient += StartClient;
@@ -79,6 +71,7 @@ public class GameManager : NetworkBehaviour
     {
         m_multiplayerUI.DisableButtons();
         NetworkManager.StartClient();
+
     }
 
     private void StartHost()
@@ -86,15 +79,10 @@ public class GameManager : NetworkBehaviour
         m_multiplayerUI.DisableButtons();
         NetworkManager.StartHost();
 
-        playerDominoes = new NetworkList<Vector3>(new List<Vector3>(), NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+        playerDominoes = new List<Vector3>();
         PopulateDominoes();
         DistributeDominoes();
-        InstanceDominoes();
-    }
-
-    void Update()
-    {
-        
+        StartCoroutine(InstanceDominoes());
     }
 
     private void PopulateDominoes()
@@ -153,22 +141,21 @@ public class GameManager : NetworkBehaviour
 
         for (int i = 0; i < 40; i++)                                              // Finally, fill the player dominos list
         {                                                                         //
-            playerDominoes.Add(shuffledDominoes[i]);
+            this.playerDominoes.Add(shuffledDominoes[i]);
         }
 
     }
-    public void InstanceDominoes()
+    public IEnumerator InstanceDominoes()
     {
         playerDominoFields = new GameObject[4];
         serverPlayerDominoes = new GameObject[4][];
         for(int i = 0;i < 4; i++)
         {
-            
-            GameObject DFParent = GameObject.Instantiate(playerDominoFieldBase, Vector3.zero, Quaternion.Euler(0, 90 * i, 0));
-            DFParent.name = "Player" + (i + 1) + "_DomnioField";
-            playerDominoFields[i] = DFParent.transform.GetChild(0).transform.gameObject;
-            playerDominoFields[i].GetComponent<NetworkObject>().Spawn();
-            playerDominoFields[i].name = "Player" + (i + 1) + "_DomnioField_Offset";
+            GameObject temp = GameObject.Instantiate(playerDominoFieldBase, new Vector3(Mathf.Sin(1.5708f * i) * -4.328f, 0.2f, Mathf.Cos(1.5708f * i) * -4.328f), Quaternion.Euler(-64.191f, i * 90, 0));
+            temp.GetComponent<NetworkObject>().Spawn();
+            yield return new WaitForFixedUpdate();
+            playerDominoFields[i] = temp;
+            playerDominoFields[i].name = "Player" + (i + 1) + "_DomnioField";
             PlayerDominoField pDomField = playerDominoFields[i].GetComponent<PlayerDominoField>();
             pDomField.dominoPositions = new NetworkList<Vector3>(new List<Vector3>(), NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
@@ -180,16 +167,17 @@ public class GameManager : NetworkBehaviour
                 int myY = Mathf.RoundToInt(playerDominoes[(i * 10) + j].y);
                 GameObject go = GameObject.Instantiate(serverDomino);
                 go.GetComponent<NetworkObject>().Spawn();
+                yield return new WaitForFixedUpdate();
                 DominoStats goStats = go.transform.GetComponent<DominoStats>();
                 goStats.myVirtualParentPos = new NetworkVariable<Vector3>(playerDominoFields[i].transform.position, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
                 pDomField.dominoPositions.Add(playerDominoFields[i].transform.right * (-1.35f + (j * 0.3f)));
                 go.transform.rotation = pDomField.transform.rotation;
                 go.transform.localPosition = pDomField.transform.position + pDomField.dominoPositions[j];
-                go.name = $"P{i}Domino_{myX}_{myY}";
-                go.tag = $"P{i + 1}Dominoes";
-                
+
                 goStats.myValue = playerDominoes[(i * 10) + j];
-                goStats.myID = j;
+                goStats.myName = $"P{i}Domino_{myX}_{myY}";
+                goStats.myTag = $"P{i + 1}Dominoes";
+                goStats.myID = (i * 10) + j;
 
                 Material[] myMat = go.transform.GetChild(0).transform.GetComponent<MeshRenderer>().materials;
                 myMat[1].mainTexture = dominoTextures[myX];
@@ -226,5 +214,42 @@ public class GameManager : NetworkBehaviour
         return shuffledDoms;
     }
 
- 
+    public void SendServerRequests()
+    {
+        for (int i = 0; i < 55; i++)
+        {
+            AskForValuesRpc(i);
+
+
+        }
+    }
+
+    [Rpc(SendTo.Server)]
+    public void AskForValuesRpc(int val)
+    {
+        if(val < 40)
+        {
+            ReturnValuesRpc(allDominoes[val], shuffledDominoes[val], playerDominoes[val]);
+        }
+        else
+        {
+            ReturnValuesRpc(allDominoes[val], shuffledDominoes[val], playerDominoes[0]);
+        }
+        
+        Debug.Log("GameManager sent value request to server");
+    }
+
+    [Rpc(SendTo.NotServer)]
+    public void ReturnValuesRpc(Vector3 allDom, Vector3 shuffledDom, Vector3 playerDom)
+    {
+        
+        this.allDominoes.Add(allDom);
+        this.shuffledDominoes.Add(shuffledDom);
+        this.playerDominoes.Add(playerDom);
+        Debug.Log("GameManager received values back from server");
+    }
+
+
+
+
 }
