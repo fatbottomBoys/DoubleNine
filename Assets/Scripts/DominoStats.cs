@@ -7,6 +7,7 @@ public class DominoStats : MonoBehaviour
     public Vector3 myValue;
     public int myID;
     public bool isDouble;
+    public bool isPlayable;
 
     public void Start()
     {

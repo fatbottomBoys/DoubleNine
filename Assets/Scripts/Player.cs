@@ -41,6 +41,7 @@ public class Player : NetworkBehaviour
     public Camera frontCamCamera;
     public GameObject topCam;
     public Camera topCamCamera;
+    public GameObject PlayerUI;
     public Vector3[] camPos;
     public Vector3[] camRot;
     [SerializeField] private AnimationCurve camAnimFlow;
@@ -77,7 +78,10 @@ public class Player : NetworkBehaviour
 
             if (Mouse.current.leftButton.wasPressedThisFrame)   // need to figure out touch controls
             {                                                   // should be "Touchscreen.current. _____________
-                heldDomino = ClickObj();
+                if (ClickObj().transform.GetComponent<DominoStats>().isPlayable)
+                {
+                    heldDomino = ClickObj();
+                }
             }
             else if (!Mouse.current.leftButton.isPressed && heldDomino != null)
             {
@@ -194,6 +198,8 @@ public class Player : NetworkBehaviour
         {
             if (myDominoValues[i].x != left && myDominoValues[i].y != left && myDominoValues[i].x != right && myDominoValues[i].y != right)
             {
+                DominoStats ds = myDominoes[i].transform.GetComponent<DominoStats>();
+                ds.isPlayable = false;
                 Material[] dominoe = myDominoes[i].transform.GetChild(0).transform.GetComponent<MeshRenderer>().materials;
                 for (int j = 0; j < dominoe.Length; j++)
                 {
@@ -202,6 +208,8 @@ public class Player : NetworkBehaviour
             }
             else
             {
+                DominoStats ds = myDominoes[i].transform.GetComponent<DominoStats>();
+                ds.isPlayable = true;
                 Material[] dominoe = myDominoes[i].transform.GetChild(0).transform.GetComponent<MeshRenderer>().materials;
                 for (int j = 0; j < dominoe.Length; j++)
                 {
@@ -212,7 +220,43 @@ public class Player : NetworkBehaviour
     }
     public void GrabDomino()
     {
+
+        //PlayDominoRpc(heldDomino);
+    }
+
+    public void PlayLeft() 
+    {
+        mainDominoField.PlayDomino(heldDomino.transform.GetComponent<DominoStats>().myValue, 0);
+    }
+
+    public void PlayRight()
+    {
+        mainDominoField.PlayDomino(heldDomino.transform.GetComponent<DominoStats>().myValue, 1);
+    }
+
+    public void PlayDomino(GameObject domino)
+    {
         
+        dominosOnField = mainDominoField.getCurrentValuesOnField();
+        int left = dominosOnField[0];
+        int right = dominosOnField[1];
+
+        //take input domino object and send RPC to server to play
+        DominoStats dominoObject = domino.transform.GetComponent<DominoStats>();
+
+        if (dominoObject.myValue.x == left || dominoObject.myValue.x == right || dominoObject.myValue.y == right || dominoObject.myValue.y == left)
+        {
+            //unhide ui for deciding play
+            PlayerUI.SetActive(true);
+        }
+        else if(dominoObject.myValue.x == left || dominoObject.myValue.y == left)
+        {
+            mainDominoField.PlayDomino(dominoObject.myValue, 0);
+        }
+        else
+        {
+            mainDominoField.PlayDomino(dominoObject.myValue, 1);
+        }
 
     }
     public IEnumerator CamAnim()

@@ -2,10 +2,15 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Unity.Netcode;
 
-public class ChangeScenes : NetworkBehaviour
+public class MainMenu : MonoBehaviour
 {
     public void EnterGame()
     {
         SceneManager.LoadScene("SampleScene");
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 }

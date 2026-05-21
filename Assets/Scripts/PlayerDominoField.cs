@@ -7,7 +7,6 @@ public class PlayerDominoField : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-
     }
 
 }
