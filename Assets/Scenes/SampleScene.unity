@@ -816,6 +816,19 @@ MonoBehaviour:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
+  playerDominoFieldBase: {fileID: 2264323141535365629, guid: 21b5a1d94790a3547b656c9ff16730fe, type: 3}
+  playerDominoFields: []
+  dominoTextures:
+  - {fileID: 2800000, guid: ddaee65964d15034aaddfd1fc4404232, type: 3}
+  - {fileID: 2800000, guid: b71687fa46913ec49bf2f67635e15395, type: 3}
+  - {fileID: 2800000, guid: 81b1cffeba74c364781ea92fca862cbc, type: 3}
+  - {fileID: 2800000, guid: b28ee1d218bd2f94b8ea1f1e441a542c, type: 3}
+  - {fileID: 2800000, guid: 12729430e1105374ca81c16570f17579, type: 3}
+  - {fileID: 2800000, guid: b85799425f7c28d4ca20e8b41795667a, type: 3}
+  - {fileID: 2800000, guid: 08f11cf8dafe1ed49be5a6d87ddd8f0e, type: 3}
+  - {fileID: 2800000, guid: a4fe975ebe81c864998ec9aa41b18691, type: 3}
+  - {fileID: 2800000, guid: d49eb7a7823fb1e4fbf53a8d3cc01a21, type: 3}
+  - {fileID: 2800000, guid: 1bd2d28df9efc5f4795674135d42ee09, type: 3}
   m_multiplayerUI: {fileID: 1127406402}
   serverDomino: {fileID: 5540097179181633028, guid: 5996b548970f3ab46b04e390986adaeb, type: 3}
   dominoPos: {x: 0, y: 0.7, z: 0}
@@ -826,7 +839,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4681891842771915477}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 

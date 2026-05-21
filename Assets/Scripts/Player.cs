@@ -143,14 +143,14 @@ public class Player : NetworkBehaviour
         }
         myDominoValues = tempValues.ToArray();
 
-        this.gameObject.transform.rotation = Quaternion.Euler(0, 90 * playerID, 0); 
-        GameObject DFParent = GameObject.Instantiate(baseDominoField, this.gameObject.transform.position, this.gameObject.transform.rotation);
-        DFParent.name = "Player" + (playerID + 1) + "_DomnioField";
-        DFParent.GetComponent<NetworkObject>().Spawn();
-        myDominoField = DFParent.transform.GetChild(0).transform.gameObject;
+        this.gameObject.transform.rotation = Quaternion.Euler(0, 90 * playerID, 0);
+        //GameObject DFParent = GameObject.Instantiate(baseDominoField, this.gameObject.transform.position, this.gameObject.transform.rotation);
+        //DFParent.name = "Player" + (playerID + 1) + "_DomnioField";
+        //DFParent.GetComponent<NetworkObject>().Spawn();
+        myDominoField = GameObject.Find("Player" + (playerID + 1) + "_DomnioField_Offset");
 
         //myDominoField.transform.parent = null;
-        myDominoField.name = "Player" + (playerID + 1) + "_DomnioField_Offset";
+        //myDominoField.name = "Player" + (playerID + 1) + "_DomnioField_Offset";
         this.gameObject.name = "Player" + (playerID + 1);
 
         
@@ -165,27 +165,26 @@ public class Player : NetworkBehaviour
     {
         dominoPositions = new Vector3[10];
         List<GameObject> tempDoms = new List<GameObject>();
-        for (int i = 0; i < myDominoValues.Length; i++) 
-        {
-            
-            int myX = Mathf.RoundToInt(myDominoValues[i].x);
-            int myY = Mathf.RoundToInt(myDominoValues[i].y);
-            GameObject go = GameObject.Instantiate(baseDomino, myDominoField.transform);
-            dominoPositions[i] = new Vector3(-1.35f + (i * 0.3f), 0, 0);
-            go.transform.localPosition = dominoPositions[i];
-            go.name = "Domino_" + myX + "_" + myY;
-            DominoStats goStats = go.transform.GetComponent<DominoStats>();
-            goStats.myValue = myDominoValues[i];
-            goStats.myID = i;
+        //for (int i = 0; i < myDominoValues.Length; i++) 
+        //{
+        //    int myX = Mathf.RoundToInt(myDominoValues[i].x);
+        //    int myY = Mathf.RoundToInt(myDominoValues[i].y);
+        //    GameObject go = GameObject.Instantiate(baseDomino, myDominoField.transform);
+        //    dominoPositions[i] = new Vector3(-1.35f + (i * 0.3f), 0, 0);
+        //    go.transform.localPosition = dominoPositions[i];
+        //    go.name = "Domino_" + myX + "_" + myY;
+        //    DominoStats goStats = go.transform.GetComponent<DominoStats>();
+        //    goStats.myValue = myDominoValues[i];
+        //    goStats.myID = i;
 
-            Material[] myMat = go.transform.GetChild(0).transform.GetComponent<MeshRenderer>().materials;
-            myMat[1].mainTexture = dominoTextures[myX];
-            myMat[2].mainTexture = dominoTextures[myY];
-            go.transform.GetChild(0).transform.GetComponent<MeshRenderer>().materials = myMat;
+        //    Material[] myMat = go.transform.GetChild(0).transform.GetComponent<MeshRenderer>().materials;
+        //    myMat[1].mainTexture = dominoTextures[myX];
+        //    myMat[2].mainTexture = dominoTextures[myY];
+        //    go.transform.GetChild(0).transform.GetComponent<MeshRenderer>().materials = myMat;
 
-            tempDoms.Add(go);
-        }
-        myDominoes = tempDoms.ToArray();
+        //    tempDoms.Add(go);
+        //}
+        myDominoes = GameObject.FindGameObjectsWithTag($"P{playerID + 1}Dominoes");
 
     }
     public void CheckPlayableTiles()

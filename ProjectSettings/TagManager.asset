@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 3
   tags:
   - ScreenCanvas
+  - P1Dominoes
+  - P2Dominoes
+  - P3Dominoes
+  - P4Dominoes
   layers:
   - Default
   - TransparentFX

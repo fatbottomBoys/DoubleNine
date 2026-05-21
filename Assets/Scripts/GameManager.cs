@@ -27,6 +27,10 @@ public class GameManager : NetworkBehaviour
     public List<Vector3> allDominoes;
     public List<Vector3> shuffledDominoes;
     public NetworkList<Vector3> playerDominoes;
+    public GameObject playerDominoFieldBase;
+    public GameObject[] playerDominoFields;
+    public GameObject[][] serverPlayerDominoes;
+    public Texture2D[] dominoTextures;
 
     [Header("Game Start stuff")]
     [SerializeField]private MultiplayerUI m_multiplayerUI;
@@ -38,17 +42,18 @@ public class GameManager : NetworkBehaviour
     public void Awake()
     {
         playerDominoes = new NetworkList<Vector3>(new List<Vector3>(), NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-        if (!IsClient)
-        {
-            PopulateDominoes();
-            DistributeDominoes();
+        //if (!IsClient)
+        //{
+        //    PopulateDominoes();
+        //    DistributeDominoes();
+        //    InstanceDominoes();
 
             
-            GameObject dom = GameObject.Instantiate(serverDomino);
-            dom.name = "TEST";
-            dom.transform.position = dominoPos;
-            dom.GetComponent<NetworkObject>().Spawn();
-        }
+        //    GameObject dom = GameObject.Instantiate(serverDomino);
+        //    dom.name = "TEST";
+        //    dom.transform.position = dominoPos;
+        //    dom.GetComponent<NetworkObject>().Spawn();
+        //}
 
 
         
@@ -80,6 +85,11 @@ public class GameManager : NetworkBehaviour
     {
         m_multiplayerUI.DisableButtons();
         NetworkManager.StartHost();
+
+        playerDominoes = new NetworkList<Vector3>(new List<Vector3>(), NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+        PopulateDominoes();
+        DistributeDominoes();
+        InstanceDominoes();
     }
 
     void Update()
@@ -146,6 +156,50 @@ public class GameManager : NetworkBehaviour
             playerDominoes.Add(shuffledDominoes[i]);
         }
 
+    }
+    public void InstanceDominoes()
+    {
+        playerDominoFields = new GameObject[4];
+        serverPlayerDominoes = new GameObject[4][];
+        for(int i = 0;i < 4; i++)
+        {
+            
+            GameObject DFParent = GameObject.Instantiate(playerDominoFieldBase, Vector3.zero, Quaternion.Euler(0, 90 * i, 0));
+            DFParent.name = "Player" + (i + 1) + "_DomnioField";
+            playerDominoFields[i] = DFParent.transform.GetChild(0).transform.gameObject;
+            playerDominoFields[i].GetComponent<NetworkObject>().Spawn();
+            playerDominoFields[i].name = "Player" + (i + 1) + "_DomnioField_Offset";
+            PlayerDominoField pDomField = playerDominoFields[i].GetComponent<PlayerDominoField>();
+            pDomField.dominoPositions = new NetworkList<Vector3>(new List<Vector3>(), NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
+
+            List<GameObject> tempDoms = new List<GameObject>();
+            for (int j = 0;j < 10; j++)
+            {
+                int myX = Mathf.RoundToInt(playerDominoes[(i*10) + j].x);
+                int myY = Mathf.RoundToInt(playerDominoes[(i * 10) + j].y);
+                GameObject go = GameObject.Instantiate(serverDomino);
+                go.GetComponent<NetworkObject>().Spawn();
+                DominoStats goStats = go.transform.GetComponent<DominoStats>();
+                goStats.myVirtualParentPos = new NetworkVariable<Vector3>(playerDominoFields[i].transform.position, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+                pDomField.dominoPositions.Add(playerDominoFields[i].transform.right * (-1.35f + (j * 0.3f)));
+                go.transform.rotation = pDomField.transform.rotation;
+                go.transform.localPosition = pDomField.transform.position + pDomField.dominoPositions[j];
+                go.name = $"P{i}Domino_{myX}_{myY}";
+                go.tag = $"P{i + 1}Dominoes";
+                
+                goStats.myValue = playerDominoes[(i * 10) + j];
+                goStats.myID = j;
+
+                Material[] myMat = go.transform.GetChild(0).transform.GetComponent<MeshRenderer>().materials;
+                myMat[1].mainTexture = dominoTextures[myX];
+                myMat[2].mainTexture = dominoTextures[myY];
+                go.transform.GetChild(0).transform.GetComponent<MeshRenderer>().materials = myMat;
+
+                tempDoms.Add(go);
+            }
+            serverPlayerDominoes[i] = tempDoms.ToArray();
+        }
     }
     private List<Vector3> Shuffle(List<Vector3> array)      // shuffles a Vector3 array
     {                                               // if you know how to make this work for any type of array, be my guest.
