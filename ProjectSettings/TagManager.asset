@@ -9,6 +9,7 @@ TagManager:
   - P2Dominoes
   - P3Dominoes
   - P4Dominoes
+  - FieldedDomino
   layers:
   - Default
   - TransparentFX

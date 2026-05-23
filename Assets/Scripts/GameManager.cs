@@ -156,11 +156,14 @@ public class GameManager : NetworkBehaviour
             yield return new WaitForFixedUpdate();
             playerDominoFields[i] = temp;
             playerDominoFields[i].name = "Player" + (i + 1) + "_DomnioField";
+            
             PlayerDominoField pDomField = playerDominoFields[i].GetComponent<PlayerDominoField>();
-            pDomField.dominoPositions = new NetworkList<Vector3>(new List<Vector3>(), NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+            pDomField.dominoPositions = new Vector3[10];
+            pDomField.myName = $"Player" + (i + 1) + "_DomnioField";
 
 
             List<GameObject> tempDoms = new List<GameObject>();
+            List<Vector3> tempPos = new List<Vector3>();
             for (int j = 0;j < 10; j++)
             {
                 int myX = Mathf.RoundToInt(playerDominoes[(i*10) + j].x);
@@ -169,13 +172,13 @@ public class GameManager : NetworkBehaviour
                 go.GetComponent<NetworkObject>().Spawn();
                 yield return new WaitForFixedUpdate();
                 DominoStats goStats = go.transform.GetComponent<DominoStats>();
-                goStats.myVirtualParentPos = new NetworkVariable<Vector3>(playerDominoFields[i].transform.position, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-                pDomField.dominoPositions.Add(playerDominoFields[i].transform.right * (-1.35f + (j * 0.3f)));
+                //goStats.myVirtualParentPos = new NetworkVariable<Vector3>(playerDominoFields[i].transform.position, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+                tempPos.Add(playerDominoFields[i].transform.right * (-1.35f + (j * 0.3f)));
                 go.transform.rotation = pDomField.transform.rotation;
-                go.transform.localPosition = pDomField.transform.position + pDomField.dominoPositions[j];
+                go.transform.position = new Vector3(0, -5, 0);
 
                 goStats.myValue = playerDominoes[(i * 10) + j];
-                goStats.myName = $"P{i}Domino_{myX}_{myY}";
+                goStats.myName = $"P{i + 1}Domino_{myX}_{myY}";
                 goStats.myTag = $"P{i + 1}Dominoes";
                 goStats.myID = (i * 10) + j;
 
@@ -186,6 +189,7 @@ public class GameManager : NetworkBehaviour
 
                 tempDoms.Add(go);
             }
+            pDomField.dominoPositions = tempPos.ToArray();
             serverPlayerDominoes[i] = tempDoms.ToArray();
         }
     }
@@ -236,7 +240,7 @@ public class GameManager : NetworkBehaviour
             ReturnValuesRpc(allDominoes[val], shuffledDominoes[val], playerDominoes[0]);
         }
         
-        Debug.Log("GameManager sent value request to server");
+        //Debug.Log("GameManager sent value request to server");
     }
 
     [Rpc(SendTo.NotServer)]
@@ -246,7 +250,7 @@ public class GameManager : NetworkBehaviour
         this.allDominoes.Add(allDom);
         this.shuffledDominoes.Add(shuffledDom);
         this.playerDominoes.Add(playerDom);
-        Debug.Log("GameManager received values back from server");
+        //Debug.Log("GameManager received values back from server");
     }
 
 

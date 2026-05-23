@@ -10,7 +10,6 @@ using Unity.Netcode;
 
 public class DominoField : NetworkBehaviour
 {
-
     public GameManager gM;
 
     [Header("Domnio prefab")]
@@ -55,23 +54,57 @@ public class DominoField : NetworkBehaviour
 
     public void Update()
     {
+        if(gM.playableEnds != currentValuesOnField) { gM.playableEnds = currentValuesOnField; }
+
         if(numDominoesPlayed <= 40)
         {
             if (Keyboard.current.eKey.wasPressedThisFrame)
             {
-                StartCoroutine(PlayDomino(standardDom, 0));
+                
+                if (IsHost)
+                {
+                    StartCoroutine(PlayDomino(standardDom, 0));
+                }
+                else
+                {
+                    AskToPlayDominoRpc(standardDom, 0);
+                }
             }
             else if (Keyboard.current.rKey.wasPressedThisFrame)
             {
-                StartCoroutine(PlayDomino(standardDom, 1));
+                
+                if (IsHost)
+                {
+                    StartCoroutine(PlayDomino(standardDom, 1));
+                }
+                else
+                {
+                    AskToPlayDominoRpc(standardDom, 1);
+                }
             }
             else if (Keyboard.current.fKey.wasPressedThisFrame)
             {
-                StartCoroutine(PlayDomino(doubleDom, 1));
+                
+                if (IsHost)
+                {
+                    StartCoroutine(PlayDomino(doubleDom, 1));
+                }
+                else
+                {
+                    AskToPlayDominoRpc(doubleDom, 1);
+                }
             }
             else if (Keyboard.current.dKey.wasPressedThisFrame)
             {
-                StartCoroutine(PlayDomino(doubleDom, 0));
+                
+                if (IsHost)
+                {
+                    StartCoroutine(PlayDomino(doubleDom, 0));
+                }
+                else
+                {
+                    AskToPlayDominoRpc(doubleDom, 0);
+                }
             }
         }
     }
@@ -126,52 +159,73 @@ public class DominoField : NetworkBehaviour
             currentValuesOnField[side] = newValue;
         }
 
-        GameObject newDomino = GameObject.Instantiate(dominoPrefab, this.transform);
+        GameObject newDomino = GameObject.Instantiate(dominoPrefab, new Vector3(0, 0.2f, 0), Quaternion.identity);
+        newDomino.GetComponent<NetworkObject>().Spawn();
+        yield return new WaitForFixedUpdate();
 
-        Material[] myMat = newDomino.transform.GetChild(0).transform.GetComponent<MeshRenderer>().materials;
-        myMat[1].mainTexture = dominoTextures[prevValueOnField];
+        newDomino.name = $"FieldDomino_{dominosPlayed.Length + 1}";
+        newDomino.tag = "FieldedDomino";
 
-        DominoStats goStats = newDomino.transform.GetComponent<DominoStats>();
+        DominoStats goStats = newDomino.GetComponent<DominoStats>();
         Vector3 newDomValue = new Vector3(0, 0, 1);
-        goStats.isActive = true;
+        
+        goStats.myName = $"FieldDomino_{dominosPlayed.Length + 1}";
+        //Debug.Log(goStats.name);
+        goStats.myID = -10;
 
-        if (!firstDom)
+        goStats.myTag = "FieldedDomino";
+        //Debug.Log(goStats.tag);
+
+
+
+        //if (!firstDom)
+        //{
+        //    if (prevValueOnField <= newValue)
+        //    {
+        //        newDomValue.x = prevValueOnField;
+        //        newDomValue.y = newValue;
+                
+        //    }
+        //    else
+        //    {
+        //        newDomValue.x = newValue;
+        //        newDomValue.y = prevValueOnField;
+        //    }
+        //}
+        //else
+        //{
+        //    newDomValue.x = domino.x;
+        //    newDomValue.y = domino.y;
+        //}
+        if(side == 0)
         {
-            if (prevValueOnField <= newValue)
-            {
-                newDomValue.x = prevValueOnField;
-                newDomValue.y = newValue;
-            }
-            else
-            {
-                newDomValue.x = newValue;
-                newDomValue.y = prevValueOnField;
-            }
+            goStats.myValue = new Vector3(prevValueOnField, newValue, 1);
         }
         else
         {
-            newDomValue.x = domino.x;
-            newDomValue.y = domino.y;
+            goStats.myValue = new Vector3(newValue, prevValueOnField, 1);
         }
         
-        goStats.myValue = newDomValue;
+        
 
-        if (isDouble)
-        {
-            goStats.isDouble = true;
-            myMat[1].mainTexture = dominoTextures[prevValueOnField];
-            myMat[2].mainTexture = dominoTextures[prevValueOnField];
-        }
-        else if(!firstDom)
-        {
-            myMat[1].mainTexture = dominoTextures[newValue];
-            myMat[2].mainTexture = dominoTextures[prevValueOnField];
-        }
-        else
-        {
-            myMat[1].mainTexture = dominoTextures[Mathf.RoundToInt(domino.x)];
-            myMat[2].mainTexture = dominoTextures[Mathf.RoundToInt(domino.y)];
-        }
+        
+
+        //if (isDouble)
+        //{
+        //    goStats.isDouble = true;
+        //    myMat[1].mainTexture = dominoTextures[prevValueOnField];
+        //    myMat[2].mainTexture = dominoTextures[prevValueOnField];
+        //}
+        //else if(!firstDom)
+        //{
+        //    myMat[1].mainTexture = dominoTextures[newValue];
+        //    myMat[2].mainTexture = dominoTextures[prevValueOnField];
+        //}
+        //else
+        //{
+        //    myMat[1].mainTexture = dominoTextures[Mathf.RoundToInt(domino.x)];
+        //    myMat[2].mainTexture = dominoTextures[Mathf.RoundToInt(domino.y)];
+        //}
 
         gM.playableEnds = currentValuesOnField;
 
@@ -410,6 +464,9 @@ public class DominoField : NetworkBehaviour
             }
         }
 
+        SendCDFRpc(currentValuesOnField[0], currentValuesOnField[1]);
+        gM.playableEnds = currentValuesOnField;
+
         yield return new WaitForFixedUpdate();
     }
 
@@ -420,6 +477,22 @@ public class DominoField : NetworkBehaviour
 
     // Tester Functions
 
+    [Rpc(SendTo.Server)]
+    public void AskToPlayDominoRpc(Vector3 domino, int side)
+    {
+        this.StartCoroutine(PlayDomino(domino, side));
+        
+    }
+
+    [Rpc(SendTo.NotServer)]
+    public void SendCDFRpc(int left, int right)
+    {
+        this.currentValuesOnField[0] = left;
+        this.currentValuesOnField[1] = right;
+        this.numDominoesPlayed++;
+
+        
+    }
 
 
 

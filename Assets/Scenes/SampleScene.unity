@@ -809,13 +809,11 @@ MonoBehaviour:
   firstPlayer: 0
   curPlayerTurn: 0
   dominoField: {fileID: 4681891842771915477}
-  playableEnds: 
+  playableEnds: 0000000000000000
   allDominoes: []
   shuffledDominoes: []
   playerDominoes:
-    UpdateTraits:
-      MinSecondsBetweenUpdates: 0
-      MaxSecondsBetweenUpdates: 0
+  - {x: -3.1681878e+21, y: 1.008e-42, z: -5.1330396e+13}
   playerDominoFieldBase: {fileID: 2993409339375191052, guid: c43c88d8bc717404682d7e523317e657, type: 3}
   playerDominoFields: []
   dominoTextures:
@@ -962,7 +960,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DominoField
   ShowTopMostFoldoutHeaderGroup: 1
   gM: {fileID: 2004366724519614472}
-  dominoPrefab: {fileID: 6586889422081284681, guid: 726927bdebcb56549aaaec940c87cd72, type: 3}
+  dominoPrefab: {fileID: 5540097179181633028, guid: 5996b548970f3ab46b04e390986adaeb, type: 3}
   dominoTextures:
   - {fileID: 2800000, guid: ddaee65964d15034aaddfd1fc4404232, type: 3}
   - {fileID: 2800000, guid: b71687fa46913ec49bf2f67635e15395, type: 3}

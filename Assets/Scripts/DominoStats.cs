@@ -12,15 +12,16 @@ public class DominoStats : NetworkBehaviour
     public string myTag;
     public int myID;
     public bool receivedResponse;
+    public Texture2D[] domTextures;
 
     public bool isDouble;
     public bool isPlayable;
-    public NetworkVariable<Vector3> myVirtualParentPos;
+    //public NetworkVariable<Vector3> myVirtualParentPos;
 
     public void Awake()
     {
         isPlayable = true;
-
+        //Debug.Log(this.gameObject.name);
         StartCoroutine(LoadIn());
         
     }
@@ -37,13 +38,20 @@ public class DominoStats : NetworkBehaviour
             while (!receivedResponse)
             {
                 yield return new WaitForFixedUpdate();
-                Debug.Log($"Domino{myID} waiting for response from server");
+                //Debug.Log($"Domino{myID} waiting for response from server");
             }
         }
         
         
-        this.gameObject.name = myName.ToString();
-        this.gameObject.tag = myTag.ToString();
+        this.gameObject.name = myName;
+        this.gameObject.tag = myTag;
+
+        Material[] myMat = this.transform.GetChild(0).transform.GetComponent<MeshRenderer>().materials;
+        if (myID == -10)
+        {
+            myMat[1].mainTexture = domTextures[Mathf.RoundToInt(myValue.x)];
+            myMat[2].mainTexture = domTextures[Mathf.RoundToInt(myValue.y)];
+        }
 
         
 
@@ -61,7 +69,7 @@ public class DominoStats : NetworkBehaviour
         myName = name;
         myTag = tag;
         receivedResponse = true;
-
+        myID = id;
         myValue = value;
     }
 

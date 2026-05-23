@@ -73,8 +73,10 @@ public class Player : NetworkBehaviour
 
             if (IsOwner)
             {
-                if (mainDominoField.numDominoesPlayed != 0)
+                //Debug.Log($"I am the owner of {this.gameObject.name}.");
+                if (mainDominoField.numDominoesPlayed > 0 && dominosOnField != gameManager.playableEnds)
                 {
+                    dominosOnField = gameManager.playableEnds;
                     CheckPlayableTiles();
                 }
 
@@ -144,7 +146,7 @@ public class Player : NetworkBehaviour
         while(gameManager.playerDominoes.Count < 40)
         {
             yield return new WaitForFixedUpdate();
-            Debug.Log("waiting for server to fill up GM's dominoes list");
+            //Debug.Log("waiting for server to fill up GM's dominoes list");
         }
 
         List<Vector3> tempValues = new List<Vector3>();
@@ -156,46 +158,31 @@ public class Player : NetworkBehaviour
 
         this.gameObject.transform.rotation = Quaternion.Euler(0, 90 * playerID, 0);
         myDominoField = GameObject.Find("Player" + (playerID + 1) + "_DomnioField");
+        dominoPositions = myDominoField.GetComponent<PlayerDominoField>().dominoPositions;
         this.gameObject.name = "Player" + (playerID + 1);
 
         
 
         PopLocalDominoes();
+
+
         StartCoroutine(CamAnim());
 
 
 
 
     }
-
     public void PopLocalDominoes()
     {
-        dominoPositions = new Vector3[10];
         List<GameObject> tempDoms = new List<GameObject>();
-        //for (int i = 0; i < myDominoValues.Length; i++) 
-        //{
-        //    int myX = Mathf.RoundToInt(myDominoValues[i].x);
-        //    int myY = Mathf.RoundToInt(myDominoValues[i].y);
-        //    GameObject go = GameObject.Instantiate(baseDomino, myDominoField.transform);
-        //    dominoPositions[i] = new Vector3(-1.35f + (i * 0.3f), 0, 0);
-        //    go.transform.localPosition = dominoPositions[i];
-        //    go.name = "Domino_" + myX + "_" + myY;
-        //    DominoStats goStats = go.transform.GetComponent<DominoStats>();
-        //    goStats.myValue = myDominoValues[i];
-        //    goStats.myID = i;
-
-        //    Material[] myMat = go.transform.GetChild(0).transform.GetComponent<MeshRenderer>().materials;
-        //    myMat[1].mainTexture = dominoTextures[myX];
-        //    myMat[2].mainTexture = dominoTextures[myY];
-        //    go.transform.GetChild(0).transform.GetComponent<MeshRenderer>().materials = myMat;
-
-        //    tempDoms.Add(go);
-        //}
         myDominoes = GameObject.FindGameObjectsWithTag($"P{playerID + 1}Dominoes");
 
         for (int i = 0; i < 10; i++) 
         {
+            
+            myDominoes[i].transform.position = myDominoField.transform.position + dominoPositions[i];
             DominoStats domStats = myDominoes[i].transform.GetComponent<DominoStats>();
+            myDominoValues[i] = domStats.myValue;
             Material[] myMat = myDominoes[i].transform.GetChild(0).transform.GetComponent<MeshRenderer>().materials;
 
             myMat[1].mainTexture = dominoTextures[Mathf.RoundToInt(domStats.myValue.x)];
@@ -205,7 +192,6 @@ public class Player : NetworkBehaviour
     }
     public void CheckPlayableTiles()
     {
-        dominosOnField = mainDominoField.getCurrentValuesOnField();
         int left = dominosOnField[0];
         int right = dominosOnField[1];
 
@@ -213,6 +199,7 @@ public class Player : NetworkBehaviour
         {
             if (myDominoValues[i].x != left && myDominoValues[i].y != left && myDominoValues[i].x != right && myDominoValues[i].y != right)
             {
+                Debug.Log($"{myDominoes[i].name} was deemed playable by values l:{left} and r:{right}");
                 DominoStats ds = myDominoes[i].transform.GetComponent<DominoStats>();
                 ds.isPlayable = false;
                 Material[] dominoe = myDominoes[i].transform.GetChild(0).transform.GetComponent<MeshRenderer>().materials;
@@ -223,6 +210,7 @@ public class Player : NetworkBehaviour
             }
             else
             {
+                Debug.Log($"{myDominoes[i].name} was deemed UNplayable by values l:{left} and r:{right}");
                 DominoStats ds = myDominoes[i].transform.GetComponent<DominoStats>();
                 ds.isPlayable = true;
                 Material[] dominoe = myDominoes[i].transform.GetChild(0).transform.GetComponent<MeshRenderer>().materials;
