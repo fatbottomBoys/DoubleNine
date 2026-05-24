@@ -52,9 +52,6 @@ public class DominoStats : NetworkBehaviour
             myMat[1].mainTexture = domTextures[Mathf.RoundToInt(myValue.x)];
             myMat[2].mainTexture = domTextures[Mathf.RoundToInt(myValue.y)];
         }
-
-        
-
     }
 
     [Rpc(SendTo.Server)]

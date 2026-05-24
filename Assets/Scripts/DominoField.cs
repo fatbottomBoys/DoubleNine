@@ -84,6 +84,7 @@ public class DominoField : NetworkBehaviour
             }
             else if (Keyboard.current.fKey.wasPressedThisFrame)
             {
+                doubleDom = new Vector3(currentValuesOnField[1], currentValuesOnField[1], 1);
                 
                 if (IsHost)
                 {
@@ -96,7 +97,7 @@ public class DominoField : NetworkBehaviour
             }
             else if (Keyboard.current.dKey.wasPressedThisFrame)
             {
-                
+                doubleDom = new Vector3(currentValuesOnField[0], currentValuesOnField[0], 1);
                 if (IsHost)
                 {
                     StartCoroutine(PlayDomino(doubleDom, 0));
@@ -136,6 +137,7 @@ public class DominoField : NetworkBehaviour
             currentValuesOnField[1] = Mathf.RoundToInt(domino.y);
         }
         int prevValueOnField = currentValuesOnField[side];
+        
 
         // generate the domino & update stats /////////////////////////////////////////////////////////
 
@@ -159,73 +161,47 @@ public class DominoField : NetworkBehaviour
             currentValuesOnField[side] = newValue;
         }
 
+        // spawn the prefab ////////////////////////////////////////////////////////////////////////////
         GameObject newDomino = GameObject.Instantiate(dominoPrefab, new Vector3(0, 0.2f, 0), Quaternion.identity);
         newDomino.GetComponent<NetworkObject>().Spawn();
         yield return new WaitForFixedUpdate();
-
         newDomino.name = $"FieldDomino_{dominosPlayed.Length + 1}";
         newDomino.tag = "FieldedDomino";
 
+        // update its stats ////////////////////////////////////////////////////////////////////////////
         DominoStats goStats = newDomino.GetComponent<DominoStats>();
-        Vector3 newDomValue = new Vector3(0, 0, 1);
-        
         goStats.myName = $"FieldDomino_{dominosPlayed.Length + 1}";
-        //Debug.Log(goStats.name);
         goStats.myID = -10;
-
         goStats.myTag = "FieldedDomino";
-        //Debug.Log(goStats.tag);
 
-
-
-        //if (!firstDom)
-        //{
-        //    if (prevValueOnField <= newValue)
-        //    {
-        //        newDomValue.x = prevValueOnField;
-        //        newDomValue.y = newValue;
-                
-        //    }
-        //    else
-        //    {
-        //        newDomValue.x = newValue;
-        //        newDomValue.y = prevValueOnField;
-        //    }
-        //}
-        //else
-        //{
-        //    newDomValue.x = domino.x;
-        //    newDomValue.y = domino.y;
-        //}
-        if(side == 0)
+        // determine its new value /////////////////////////////////////////////////////////////////////
+        Vector3 newDomValue = new Vector3(0, 0, 1);
+        if (!firstDom)
         {
-            goStats.myValue = new Vector3(prevValueOnField, newValue, 1);
+            newDomValue.x = newValue;
+            newDomValue.y = prevValueOnField;
+            //if (prevValueOnField <= newValue)
+            //{
+            //    newDomValue.x = prevValueOnField;
+            //    newDomValue.y = newValue;
+
+            //}
+            //else
+            //{
+            //    newDomValue.x = newValue;
+            //    newDomValue.y = prevValueOnField;
+            //}
         }
         else
         {
-            goStats.myValue = new Vector3(newValue, prevValueOnField, 1);
+            newDomValue.x = domino.x;
+            newDomValue.y = domino.y;
         }
-        
-        
 
-        
+        //Debug.Log($"New Domino spawned. New value was {newValue} and the previous value was {prevValueOnField}");
+        //Debug.Log($"New Domino Stats are {newDomValue.x}, {newDomValue.y}, 1");
 
-        //if (isDouble)
-        //{
-        //    goStats.isDouble = true;
-        //    myMat[1].mainTexture = dominoTextures[prevValueOnField];
-        //    myMat[2].mainTexture = dominoTextures[prevValueOnField];
-        //}
-        //else if(!firstDom)
-        //{
-        //    myMat[1].mainTexture = dominoTextures[newValue];
-        //    myMat[2].mainTexture = dominoTextures[prevValueOnField];
-        //}
-        //else
-        //{
-        //    myMat[1].mainTexture = dominoTextures[Mathf.RoundToInt(domino.x)];
-        //    myMat[2].mainTexture = dominoTextures[Mathf.RoundToInt(domino.y)];
-        //}
+        goStats.myValue = newDomValue;
 
         gM.playableEnds = currentValuesOnField;
 
@@ -274,7 +250,7 @@ public class DominoField : NetworkBehaviour
         {
             if (curSection[side] % 2 == 0 && spaceOnTable[side] + (2 * dominoHalfSize[0]) + dominoHalfSize[1] >= sizeLimiter[0]) // if the current section is LONG and its OVER the long limit
             {
-                print("Long section " + curSection[side] + " on side " + side + "'s second to last tile...");
+                //print("Long section " + curSection[side] + " on side " + side + "'s second to last tile...");
                 curSection[side]++;
                 spaceOnTable[side] = 0;
 
@@ -288,7 +264,7 @@ public class DominoField : NetworkBehaviour
                 }
 
                 int tempMult = 0;
-                if(newDomino.transform.localPosition.z > 0)
+                if(newDomino.transform.position.z > 0)
                 {
                     tempMult = 1;
                 }
@@ -299,15 +275,17 @@ public class DominoField : NetworkBehaviour
 
                 if (isDouble)
                 {
-                    print("was a double");
-                    nextStandardRot[side] += new Vector3(0, 90 * tempMult, 0);
+                    //print("was a double");
+                    nextStandardRot[side] += new Vector3(0, 90 + (90 * (curSection[side] - 1) * side), 0);
+                    Debug.Log($"Rotated by {90 + (90 * (curSection[side] - 1) * side)} on side {side}");
                     nextStandardPos[side] = newDomino.transform.localPosition + new Vector3(dominoHalfSize[0] * 2 * multiplier[side], 0, 0);
                     nextDoubleRot[side] += new Vector3(0, 90, 0);
                 }
                 else
                 {
-                    print("wasn't a double");
-                    nextStandardRot[side] += new Vector3(0, 90 * tempMult, 0);
+                    //print("wasn't a double");
+                    nextStandardRot[side] += new Vector3(0, 90 + (90 * (curSection[side] - 1) * side), 0);
+                    Debug.Log($"Rotated by {90 + (90 * (curSection[side] - 1) * side)} on side {side}");
                     nextStandardPos[side] = newDomino.transform.localPosition + new Vector3(dominoHalfSize[1] * multiplier[side], 0, (dominoHalfSize[0] + dominoHalfSize[1]) * tempMult);
                     nextDoublePos[side] = newDomino.transform.localPosition + new Vector3(0, 0, (dominoHalfSize[0] + dominoHalfSize[1]) * tempMult);
                     specCirc1[side] = true;
@@ -317,7 +295,7 @@ public class DominoField : NetworkBehaviour
             }
             else if (curSection[side] % 2 == 1 && spaceOnTable[side] + (2 * dominoHalfSize[0]) + dominoHalfSize[1] >= sizeLimiter[1]) // or if the current section is SHORT and its OVER the short limit
             {
-                print("Short section " + curSection[side] + " on side " + side + "'s second to last tile...");
+                //print("Short section " + curSection[side] + " on side " + side + "'s second to last tile...");
                 curSection[side]++;
                 spaceOnTable[side] = -1 * sizeLimiter[0];
 
@@ -331,7 +309,7 @@ public class DominoField : NetworkBehaviour
                 }
 
                 int tempMult = 0;
-                if (newDomino.transform.localPosition.x > 0)
+                if (newDomino.transform.position.x > 0)
                 {
                     tempMult = 1;
                 }
@@ -343,15 +321,17 @@ public class DominoField : NetworkBehaviour
 
                 if (isDouble)
                 {
-                    print("was a double");
+                    //print("was a double");
                     nextStandardPos[side] = newDomino.transform.localPosition + new Vector3(0, 0, dominoHalfSize[0] * 2 * multiplier[side]);
-                    nextStandardRot[side] += new Vector3(0, (90 * multiplier[side]) + 180, 0);
+                    nextStandardRot[side] += new Vector3(0, (90 * multiplier[side] * -1) + (180 * side), 0);
+                    Debug.Log($"Rotated by {(90 * multiplier[side] * -1) + (180 * side)} on side {side}");
                     nextDoubleRot[side] += new Vector3(0, 90, 0);
                 }
                 else
                 {
-                    print("wasn't a double");
-                    nextStandardRot[side] += new Vector3(0, (90 * multiplier[side]) + 180, 0);
+                    //print("wasn't a double");
+                    nextStandardRot[side] += new Vector3(0, (90 * multiplier[side] * -1) + (180 * side), 0);
+                    Debug.Log($"Rotated by {(90 * multiplier[side] * -1) + (180 * side)} on side {side}");
                     nextStandardPos[side] = newDomino.transform.localPosition + new Vector3(dominoHalfSize[1] * tempMult, 0, 0.415f * multiplier[side]);
                     nextDoublePos[side] = newDomino.transform.localPosition + new Vector3((dominoHalfSize[0] + dominoHalfSize[1]) * tempMult, 0, 0);
                     specCirc2[side] = true;
