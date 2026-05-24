@@ -20,6 +20,7 @@ public class Player : NetworkBehaviour
     private InputActionReference inputRef;
     public event Action touchTap;
     public event Action touchHold;
+    private Vector3 mousePos;
 
     [Header("My dominoes")]
     public Vector3[] myDominoValues;
@@ -68,10 +69,10 @@ public class Player : NetworkBehaviour
     {
         if (playerID != -1) 
         {
-            if (IsClient && Keyboard.current.qKey.wasPressedThisFrame)
-            {
-                PingRpc(playerID);
-            }
+            //if (IsClient && Keyboard.current.qKey.wasPressedThisFrame)
+            //{
+            //    PingRpc(playerID);
+            //}
 
             if (IsOwner)
             {
@@ -81,26 +82,60 @@ public class Player : NetworkBehaviour
                     dominosOnField = gameManager.playableEnds;
                     CheckPlayableTiles();
                 }
+                
 
-                if (Mouse.current.leftButton.wasPressedThisFrame)   // need to figure out touch controls
-                {                                                   // should be "Touchscreen.current. _____________
-                    if (ClickObj().transform.GetComponent<DominoStats>().isPlayable)
+                if (IsHost)
+                {
+                    mousePos = CurMousePos();
+                    if (Mouse.current.leftButton.wasPressedThisFrame && ClickObj() != "0")   // need to figure out touch controls
+                    {                                                   // should be "Touchscreen.current. _____________
+                        GameObject go = GameObject.Find(ClickObj());
+                        if (go.transform.GetComponent<DominoStats>().isPlayable && go.CompareTag($"P{playerID + 1}Dominoes"))
+                        {
+                            heldDomino = go;
+                        }
+                    }
+                    else if (!Mouse.current.leftButton.isPressed && heldDomino != null)
                     {
-                        heldDomino = ClickObj();
+                        //GameObject go = GameObject.Find(ClickObj());
+                        
+                        heldDomino = null;
+                        triggerRepos = true;
                     }
                 }
-                else if (!Mouse.current.leftButton.isPressed && heldDomino != null)
+                else
                 {
-                    heldDomino = null;
-                    triggerRepos = true;
+
+                    if (Mouse.current.leftButton.wasPressedThisFrame && ClickObj() != "0")   // need to figure out touch controls
+                    {                                                   // should be "Touchscreen.current. _____________
+                        SendMousePosRpc(CurMousePos());
+                        GameObject go = GameObject.Find(ClickObj());
+                        if (go.transform.GetComponent<DominoStats>().isPlayable && go.CompareTag($"P{playerID + 1}Dominoes"))
+                        {
+                            heldDomino = go;
+                            SendHeldDomNameRpc(ClickObj(), false);
+                        }
+                    }
+                    else if(!Mouse.current.leftButton.isPressed && heldDomino != null)
+                    {
+                        heldDomino = null;
+                        SendHeldDomNameRpc("0", true);
+                    }
+                    else if (Mouse.current.leftButton.isPressed)
+                    {
+                        SendMousePosRpc(CurMousePos());
+                    }
                 }
 
-                if (heldDomino != null)
-                {
-                    heldDomino.transform.position = CurMousePos();
-                }
-                ReposDominos();
+                
             }
+
+            ReposDominos();
+            if (heldDomino != null)
+            {
+                heldDomino.transform.position = mousePos;
+            }
+
         }
     }
 
@@ -229,17 +264,14 @@ public class Player : NetworkBehaviour
         // but I am currently not calling the play function just yet.
         //PlayDominoRpc(heldDomino);
     }
-
     public void PlayLeft()                                                                      //Ui trigger function for playing held domino on left side
     {
         mainDominoField.PlayDomino(heldDomino.transform.GetComponent<DominoStats>().myValue, 0);
     }
-
     public void PlayRight()                                                                      //Ui trigger function for playing held domino on right side
     {
         mainDominoField.PlayDomino(heldDomino.transform.GetComponent<DominoStats>().myValue, 1);
     }
-
     public void PlayDomino(GameObject domino)
     {
         
@@ -284,47 +316,59 @@ public class Player : NetworkBehaviour
     }
     public void ReposDominos()
     {
-        if(heldDomino != null && heldDomino.transform.localPosition.z <= 0.7f)
+        if(heldDomino != null)
         {
             int domID = heldDomino.transform.GetComponent<DominoStats>().myID;
+            //Debug.Log("Got Domino Stats");
             int totalDominoes = myDominoes.Length;
             int[] closestDominoes = new int[2];
             closestDominoes[0] = 0;
             closestDominoes[1] = 0;
 
             List<GameObject> nonHeldDoms = new List<GameObject>();      // put all the non-held dominoes in a list
-            for (int i = 0; i < myDominoes.Length - 1; i++)
+            for (int i = 0; i < myDominoes.Length; i++)
             {
                 if (reposArray[i] != domID)
                 {
                     nonHeldDoms.Add(myDominoes[reposArray[i]]);
-                    //print("Added domino at ID " + i);
+                    //Debug.Log($"Added domino at ID {i}, current count = {nonHeldDoms.Count}");
                 }
                 
             }
 
-            for (int i = 0; i < dominoPositions.Length-1; i++)     // check which two dominos in the sequence are closest to the held one.
+            for (int i = 0; i < myDominoes.Length; i++)     // check which two domino positions in the sequence are closest to the held one.
             {
-                if (Vector3.Distance(myDominoes[domID].transform.position, dominoPositions[i]) <
-                    Vector3.Distance(myDominoes[domID].transform.position, dominoPositions[closestDominoes[1]]))
+                if (Vector3.Distance(myDominoes[domID].transform.position, dominoPositions[i] + myDominoField.transform.position) <
+                    Vector3.Distance(myDominoes[domID].transform.position, dominoPositions[closestDominoes[1]] + myDominoField.transform.position))
                 {
                     closestDominoes[0] = closestDominoes[1];
                     closestDominoes[1] = i;
-                    //Debug.Log(closestDominoes[0] + ", " + closestDominoes[1]);
                     
                 }
             }
 
             int idToSkip = 0;                                   //figure out where the gap should be
 
-            if(closestDominoes[0] == 0 && Mathf.Abs(myDominoes[domID].transform.position.x - dominoPositions[closestDominoes[1]].x) > .35)                         // at the very beginning?
+            float absPos = 0f;
+            //Debug.Log($"{myDominoField.transform.right.x}, {myDominoField.transform.right.y}, {myDominoField.transform.right.z}");
+            // sometimes these positions are going to be on the Z axis as well.
+            if (Mathf.Abs(myDominoField.transform.right.x) >= 0.00001f)
+            {
+                absPos = Mathf.Abs(myDominoes[domID].transform.position.x - dominoPositions[closestDominoes[1]].x);
+            }
+            else
+            {
+                absPos = Mathf.Abs(myDominoes[domID].transform.position.z - dominoPositions[closestDominoes[1]].z);
+            }
+
+            if(closestDominoes[0] == 0 && absPos > .35)                         // at the very beginning?
             {
                 idToSkip = 0;
             }
-            else if(closestDominoes[1] == nonHeldDoms.Count -1 && Mathf.Abs(myDominoes[domID].transform.position.x - dominoPositions[closestDominoes[0]].x) > .35)   //at the very end?
+            else if(closestDominoes[1] == nonHeldDoms.Count && absPos > .35)   //at the very end?
             {
-                Debug.Log(Mathf.Abs(myDominoes[domID].transform.position.x - dominoPositions[closestDominoes[1]].x));
-                idToSkip = nonHeldDoms.Count-1;
+                //Debug.Log($"heldDom = farthest right, calculating from id {closestDominoes[1]}, nonHeldDoms.count is {nonHeldDoms.Count}");
+                idToSkip = myDominoes.Length - 1;
             }
             else if (closestDominoes[0] > closestDominoes[1])   // at 0?
             {
@@ -335,10 +379,10 @@ public class Player : NetworkBehaviour
                 idToSkip = closestDominoes[1];                  // or at 1?
             }
 
-            Debug.Log(idToSkip);
+            //Debug.Log($"ID to skip is {idToSkip}");
 
             int temp = 0;
-            for (int i = 0; i < myDominoes.Length -1; i++)   //make a new list containing all the values, INCLUDING the gap, 
+            for (int i = 0; i < myDominoes.Length; i++)   //make a new list containing all the values, INCLUDING the gap, 
             {
                 if (i != idToSkip)
                 {
@@ -377,17 +421,17 @@ public class Player : NetworkBehaviour
             return Vector3.zero;
         }
     }
-    private GameObject ClickObj()
+    private string ClickObj()
     {
         LayerMask lMask = LayerMask.GetMask("Domino");
         Ray ray = frontCamCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
         if (Physics.Raycast(ray, out RaycastHit raycastHit, 100, lMask))
         {
-            return raycastHit.collider.gameObject;
+            return raycastHit.collider.gameObject.name;
         }
         else
         {
-            return null;
+            return "0";
         }
     }
     private Vector3 TouchPoint()
@@ -403,21 +447,21 @@ public class Player : NetworkBehaviour
         }
     }
 
-    [Rpc(SendTo.Server)]
-    public void PingRpc(int player)
-    {
-        // Server -> Clients because PongRpc sends to NotServer
-        // Note: This will send to all clients.
-        // Sending to the specific client that requested the pong will be discussed in the next section.
-        PongRpc(player, "PONG!");
-        Debug.Log($"Received ping from player {player}");
-    }
+    //[Rpc(SendTo.Server)]
+    //public void PingRpc(int player)
+    //{
+    //    // Server -> Clients because PongRpc sends to NotServer
+    //    // Note: This will send to all clients.
+    //    // Sending to the specific client that requested the pong will be discussed in the next section.
+    //    PongRpc(player, "PONG!");
+    //    Debug.Log($"Received ping from player {player}");
+    //}
 
-    [Rpc(SendTo.NotServer)]
-    void PongRpc(int player, string message)
-    {
-        Debug.Log($"Received pong from server originating from {player}");
-    }
+    //[Rpc(SendTo.NotServer)]
+    //void PongRpc(int player, string message)
+    //{
+    //    Debug.Log($"Received pong from server originating from {player}");
+    //}
 
     [Rpc(SendTo.Server)]
     public void AskForValuesRpc()
@@ -431,9 +475,30 @@ public class Player : NetworkBehaviour
         this.name = name;
     }
 
-    
+    [Rpc(SendTo.Server)]
+    public void SendHeldDomNameRpc(string name, bool trigRepos)
+    {
+        if(name != "0")
+        {
+            heldDomino = GameObject.Find(name);
+        }
+        else
+        {
+            heldDomino = null;
+        }
 
-    
+        this.triggerRepos = trigRepos;
+    }
+
+    [Rpc(SendTo.Server)]
+    public void SendMousePosRpc(Vector3 mPos)
+    {
+        mousePos = mPos;
+    }
+
+
+
+
 
 
 

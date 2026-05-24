@@ -44,12 +44,6 @@ public class GameManager : NetworkBehaviour
     {
         playerDominoes = new List<Vector3>();
 
-
-        
-
-
-
-
         //initialize debug multiplayer connectivity
         if (m_multiplayerUI != null)
         {
@@ -180,7 +174,7 @@ public class GameManager : NetworkBehaviour
                 goStats.myValue = playerDominoes[(i * 10) + j];
                 goStats.myName = $"P{i + 1}Domino_{myX}_{myY}";
                 goStats.myTag = $"P{i + 1}Dominoes";
-                goStats.myID = (i * 10) + j;
+                goStats.myID = j;
 
                 Material[] myMat = go.transform.GetChild(0).transform.GetComponent<MeshRenderer>().materials;
                 myMat[1].mainTexture = dominoTextures[myX];
