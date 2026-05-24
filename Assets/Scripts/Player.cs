@@ -34,6 +34,8 @@ public class Player : NetworkBehaviour
     public DominoField mainDominoField;
     public int[] dominosOnField;
     [SerializeField] private GameObject heldDomino;
+    [SerializeField] private GameObject selectedDomino;
+
 
 
     [Header("My cameras")]
@@ -285,12 +287,13 @@ public class Player : NetworkBehaviour
         if(heldDomino != null && heldDomino.transform.localPosition.z <= 0.7f)
         {
             int domID = heldDomino.transform.GetComponent<DominoStats>().myID;
+            int totalDominoes = myDominoes.Length;
             int[] closestDominoes = new int[2];
             closestDominoes[0] = 0;
             closestDominoes[1] = 0;
 
             List<GameObject> nonHeldDoms = new List<GameObject>();      // put all the non-held dominoes in a list
-            for (int i = 0; i < myDominoes.Length; i++)
+            for (int i = 0; i < myDominoes.Length - 1; i++)
             {
                 if (reposArray[i] != domID)
                 {
@@ -300,25 +303,28 @@ public class Player : NetworkBehaviour
                 
             }
 
-            for (int i = 1; i < nonHeldDoms.Count; i++)     // check which two dominos in the sequence are closest to the held one.
+            for (int i = 0; i < dominoPositions.Length-1; i++)     // check which two dominos in the sequence are closest to the held one.
             {
-                if (Vector3.Distance(myDominoes[domID].transform.position, nonHeldDoms[i].transform.position) <
-                    Vector3.Distance(myDominoes[domID].transform.position, nonHeldDoms[closestDominoes[0]].transform.position))
+                if (Vector3.Distance(myDominoes[domID].transform.position, dominoPositions[i]) <
+                    Vector3.Distance(myDominoes[domID].transform.position, dominoPositions[closestDominoes[1]]))
                 {
-                    closestDominoes[1] = closestDominoes[0];
-                    closestDominoes[0] = Array.IndexOf(myDominoes, nonHeldDoms[i]);
+                    closestDominoes[0] = closestDominoes[1];
+                    closestDominoes[1] = i;
+                    //Debug.Log(closestDominoes[0] + ", " + closestDominoes[1]);
+                    
                 }
             }
 
             int idToSkip = 0;                                   //figure out where the gap should be
 
-            if(closestDominoes[0] == 0)                         // at the very beginning?
+            if(closestDominoes[0] == 0 && Mathf.Abs(myDominoes[domID].transform.position.x - dominoPositions[closestDominoes[1]].x) > .35)                         // at the very beginning?
             {
                 idToSkip = 0;
             }
-            else if(closestDominoes[0] == nonHeldDoms.Count)    //at the very end?
+            else if(closestDominoes[1] == nonHeldDoms.Count -1 && Mathf.Abs(myDominoes[domID].transform.position.x - dominoPositions[closestDominoes[0]].x) > .35)   //at the very end?
             {
-                idToSkip = nonHeldDoms.Count;
+                Debug.Log(Mathf.Abs(myDominoes[domID].transform.position.x - dominoPositions[closestDominoes[1]].x));
+                idToSkip = nonHeldDoms.Count-1;
             }
             else if (closestDominoes[0] > closestDominoes[1])   // at 0?
             {
@@ -329,8 +335,10 @@ public class Player : NetworkBehaviour
                 idToSkip = closestDominoes[1];                  // or at 1?
             }
 
+            Debug.Log(idToSkip);
+
             int temp = 0;
-            for (int i = 0; i < myDominoes.Length; i++)   //make a new list containing all the values, INCLUDING the gap, 
+            for (int i = 0; i < myDominoes.Length -1; i++)   //make a new list containing all the values, INCLUDING the gap, 
             {
                 if (i != idToSkip)
                 {
