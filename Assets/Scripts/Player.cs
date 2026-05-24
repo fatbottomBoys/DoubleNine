@@ -302,8 +302,8 @@ public class Player : NetworkBehaviour
 
             for (int i = 1; i < nonHeldDoms.Count; i++)     // check which two dominos in the sequence are closest to the held one.
             {
-                if (Vector3.Distance(myDominoes[domID].transform.localPosition, nonHeldDoms[i].transform.localPosition) <
-                    Vector3.Distance(myDominoes[domID].transform.localPosition, nonHeldDoms[closestDominoes[0]].transform.localPosition))
+                if (Vector3.Distance(myDominoes[domID].transform.position, nonHeldDoms[i].transform.position) <
+                    Vector3.Distance(myDominoes[domID].transform.position, nonHeldDoms[closestDominoes[0]].transform.position))
                 {
                     closestDominoes[1] = closestDominoes[0];
                     closestDominoes[0] = Array.IndexOf(myDominoes, nonHeldDoms[i]);
@@ -335,7 +335,7 @@ public class Player : NetworkBehaviour
                 if (i != idToSkip)
                 {
                     reposArray[i] = Array.IndexOf(myDominoes, nonHeldDoms[temp]);
-                    nonHeldDoms[temp].transform.localPosition = dominoPositions[i];
+                    nonHeldDoms[temp].transform.position = dominoPositions[i] + myDominoField.transform.position;
                     temp++;
                 }
                 else
@@ -349,7 +349,7 @@ public class Player : NetworkBehaviour
         {
             for(int i = 0; i < myDominoes.Length; i++)
             {
-                myDominoes[reposArray[i]].transform.localPosition = dominoPositions[i];
+                myDominoes[reposArray[i]].transform.position = dominoPositions[i] + myDominoField.transform.position;
             }
 
             triggerRepos = false;
